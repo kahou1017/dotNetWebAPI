@@ -55,6 +55,13 @@ public sealed class DatabaseInitializer(
                 UpdatedAt TEXT NOT NULL
             );
 
+            CREATE TABLE IF NOT EXISTS Customers (
+                CustomerId TEXT NOT NULL PRIMARY KEY,
+                CustomerName TEXT NOT NULL,
+                Status TEXT NOT NULL,
+                UpdatedAt TEXT NOT NULL
+            );
+
             CREATE TABLE IF NOT EXISTS Tokens (
                 TokenId TEXT NOT NULL PRIMARY KEY,
                 JwtId TEXT NOT NULL,
@@ -130,6 +137,12 @@ public sealed class DatabaseInitializer(
             INSERT OR IGNORE INTO Devices (DeviceId, UserId, DeviceName, DeviceType, IsEnabled, Remark, CreatedAt, UpdatedAt)
             VALUES
                 ('DEVICE-001', 'USER001', 'Kevin Laptop', 'Windows', 1, 'seed device', @SeedNow, @SeedNow);
+
+            INSERT OR IGNORE INTO Customers (CustomerId, CustomerName, Status, UpdatedAt)
+            VALUES
+                ('CUST-001', 'Demo Customer', 'Active', @SeedNow),
+                ('CUST-900', 'VIP Customer', 'Active', @SeedNow),
+                ('CUST-999', 'Suspended Customer', 'Suspended', @SeedNow);
 
             INSERT OR IGNORE INTO Tokens (
                 TokenId, JwtId, TokenType, UserId, UserName, TokenName, Status, IsRevoked, IsSingleDevice, IsEnabled,

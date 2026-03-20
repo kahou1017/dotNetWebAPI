@@ -81,10 +81,14 @@
 
 ### 3. Backend Business API 擴充
 
-- [ ] 定義第一個正式業務模組
-- [ ] 補 request / response contract
-- [ ] 補 service / repository / controller flow
-- [ ] 補 `AuthenticatedUser` 權限驗證
+- [x] 定義第一個正式業務模組
+  Completed: 2026-03-21 01:39
+- [x] 補 request / response contract
+  Completed: 2026-03-21 01:39
+- [x] 補 service / repository / controller flow
+  Completed: 2026-03-21 01:39
+- [x] 補 `AuthenticatedUser` 權限驗證
+  Completed: 2026-03-21 01:39
 - [ ] 規劃 scope 規則
 
 ### 4. Logging 完整化
@@ -104,9 +108,12 @@
 
 ### 6. 測試策略
 
-- [ ] `Admin AuthController` integration test
-- [ ] `Dimensions.Api` token validation / business API flow test
-- [ ] SQLite integration test baseline
+- [x] `Admin AuthController` integration test
+  Completed: 2026-03-21 01:36
+- [x] `Dimensions.Api` token validation / business API flow test
+  Completed: 2026-03-21 01:36
+- [x] SQLite integration test baseline
+  Completed: 2026-03-21 01:36
 
 ## Priority 4
 

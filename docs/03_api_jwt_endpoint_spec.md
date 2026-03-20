@@ -175,6 +175,11 @@ Policy：
 
 驗證規則：
 
+- 需要有效的 bearer token
+- 目前實作已接到第一個正式業務模組 `Customer`
+- 查詢流程為 `Controller -> Application Service -> Repository -> SQLite`
+- 若找不到對應客戶，回傳 `Customer.NotFound`
+
 - 驗 JWT 簽章
 - 驗 DB token 狀態
 - 驗 token 類型

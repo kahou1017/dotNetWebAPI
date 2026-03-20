@@ -31,6 +31,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<DapperSqlExecutor>();
         services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
         services.AddScoped<IAdminRepository, AdminRepository>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();
         services.AddScoped<IDeviceRepository, DeviceRepository>();
 

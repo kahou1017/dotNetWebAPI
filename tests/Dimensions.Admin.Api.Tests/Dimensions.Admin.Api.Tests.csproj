@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Dimensions.Api\Dimensions.Api.csproj" />
-    <ProjectReference Include="..\..\src\Dimensions.Admin.Api\Dimensions.Admin.Api.csproj" Aliases="adminapi" />
+    <ProjectReference Include="..\..\src\Dimensions.Admin.Api\Dimensions.Admin.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Dimensions.Application.Exceptions;
 using Dimensions.Admin.Api.Responses;
 
@@ -41,4 +41,3 @@ public sealed class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Ex
         }
     }
 }
-

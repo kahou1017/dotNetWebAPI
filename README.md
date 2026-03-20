@@ -13,6 +13,8 @@
 - 已完成 request validation
 - 已完成 Swagger / OpenAPI
 - 已完成第一波 token / device 規則補強
+- 已建立 `Dimensions.Admin.Api.Tests` 與 API integration test baseline
+- 已將 `Customer` 升級為第一個走 service / repository / SQLite 的業務模組
 - 已整理新版正式文件到 `docs/`
 
 ## 目前架構方向
@@ -43,12 +45,12 @@
 - `Dimensions.Domain`
 - `Dimensions.Infrastructure`
 - `Dimensions.Api.Tests`
+- `Dimensions.Admin.Api.Tests`
 - `Dimensions.Application.Tests`
 
 ### 已定案、待建立的專案
 
 - `Dimensions.Admin.Web`
-- `Dimensions.Admin.Api.Tests`
 
 ## Solution 結構
 
@@ -65,6 +67,7 @@ src/
   Dimensions.Infrastructure
 tests/
   Dimensions.Api.Tests
+  Dimensions.Admin.Api.Tests
   Dimensions.Application.Tests
 ```
 
@@ -73,8 +76,6 @@ tests/
 ```text
 src/
   Dimensions.Admin.Web
-tests/
-  Dimensions.Admin.Api.Tests
 ```
 
 ## 技術棧
@@ -116,6 +117,11 @@ Development 預設使用 [appsettings.Development.json](src/Dimensions.Api/appse
 
 - `Provider`: `Sqlite`
 - `ConnectionStrings:DefaultConnection`: `Data Source=dimensions-dev.db;Cache=Shared;Foreign Keys=True`
+
+`Dimensions.Admin.Api` 在 Development 會共用同一份 SQLite 檔案，方便本機直接驗證：
+
+- 管理端登入 / 發 token
+- 業務 API 驗 token / 寫 usage log
 
 SQLite 檔案位置：
 
@@ -169,6 +175,13 @@ SQLite 檔案位置：
 - `DisableDeviceRequest`
 - `CustomerQueryRequest`
 
+## 目前第一個業務模組
+
+- `Customer`
+  - `POST /api/customer/query`
+  - 已不再只是 demo 回傳
+  - 目前會走 `CustomerController -> CustomerService -> CustomerRepository -> SQLite`
+
 ## Token / Device 規則現況
 
 目前已補上的重點：
@@ -189,6 +202,15 @@ SQLite 檔案位置：
 - API 使用 `log4net`
 - 設定檔在 [log4net.config](src/Dimensions.Api/log4net.config)
 - 本機 log 會寫到 `Logs/`
+
+## 測試
+
+- `Dimensions.Admin.Api.Tests`
+  - 已驗證 `admin-api/auth/login -> admin-api/auth/me`
+- `Dimensions.Api.Tests`
+  - 已驗證 `Admin.Api 建 token -> Dimensions.Api 呼叫 /api/customer/query`
+- `Dimensions.Application.Tests`
+  - 目前先保留最小 baseline，確保測試專案可持續擴充
 
 ## Swagger / OpenAPI
 

@@ -24,6 +24,7 @@
 - `Dimensions.Infrastructure`
 - `Dimensions.Contracts`
 - `Dimensions.Api.Tests`
+- `Dimensions.Admin.Api.Tests`
 - `Dimensions.Application.Tests`
 
 以上 project 是目前 solution 中已經存在、可直接看到 `.csproj` 的專案。
@@ -33,7 +34,6 @@
 以下 project 是架構上已定案，但目前尚未建立的專案：
 
 - `Dimensions.Admin.Web`
-- `Dimensions.Admin.Api.Tests`
 
 等這些 project 建立後，也要把對應的 NuGet 套件補進這份文件。
 
@@ -105,9 +105,30 @@
 - `Dimensions.Contracts`
   - 目前以 request / response model 為主
 - `Dimensions.Api.Tests`
-  - 後續會依實際測試框架再補齊
+  - `Microsoft.AspNetCore.Mvc.Testing`
+    - `Dimensions.Api` integration test host
+  - `Microsoft.NET.Test.Sdk`
+    - 測試執行器
+  - `xunit`
+    - 測試框架
+  - `xunit.runner.visualstudio`
+    - 測試執行整合
+- `Dimensions.Admin.Api.Tests`
+  - `Microsoft.AspNetCore.Mvc.Testing`
+    - `Dimensions.Admin.Api` integration test host
+  - `Microsoft.NET.Test.Sdk`
+    - 測試執行器
+  - `xunit`
+    - 測試框架
+  - `xunit.runner.visualstudio`
+    - 測試執行整合
 - `Dimensions.Application.Tests`
-  - 後續會依實際測試框架再補齊
+  - `Microsoft.NET.Test.Sdk`
+    - 測試執行器
+  - `xunit`
+    - 測試框架
+  - `xunit.runner.visualstudio`
+    - 測試執行整合
 
 ## 新手怎麼看這份
 

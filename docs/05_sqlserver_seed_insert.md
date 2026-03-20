@@ -4,6 +4,15 @@
 
 這份文件說明 seed SQL 的用途與建議執行順序。
 
+目前除了管理員、token、device 相關 seed，也建議加入第一個業務模組的資料。
+
+範例：
+
+- `Customer`
+  - `CUST-001 / Demo Customer / Active`
+  - `CUST-900 / VIP Customer / Active`
+  - `CUST-999 / Suspended Customer / Suspended`
+
 它的定位是：
 
 - 給 DEV / TEST 使用

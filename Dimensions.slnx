@@ -9,6 +9,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Dimensions.Api.Tests/Dimensions.Api.Tests.csproj" />
+    <Project Path="tests/Dimensions.Admin.Api.Tests/Dimensions.Admin.Api.Tests.csproj" />
     <Project Path="tests/Dimensions.Application.Tests/Dimensions.Application.Tests.csproj" />
   </Folder>
 </Solution>

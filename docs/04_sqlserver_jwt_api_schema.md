@@ -17,6 +17,14 @@
 7. `JwtTokenActionLog`
 8. `JwtTokenUsageLog`
 
+另外，正式業務模組可依需求增加自己的業務資料表。
+
+目前第一個示範模組為：
+
+- `Customer`
+  - 建議對應資料表：`Customer`
+  - 用來支援 `POST /api/customer/query`
+
 ## 各資料表用途
 
 ### 1. JwtAdminUser

@@ -15,7 +15,7 @@ public sealed class ApiRequestLogMiddleware(RequestDelegate next, ILogger<ApiReq
             new ApiRequestLogEntry
             {
                 CaseId = caseId,
-                Path = context.Request.Path,
+                Path = context.Request.Path.Value ?? string.Empty,
                 Method = context.Request.Method,
                 StatusCode = context.Response.StatusCode,
                 ClientIp = context.Connection.RemoteIpAddress?.ToString(),

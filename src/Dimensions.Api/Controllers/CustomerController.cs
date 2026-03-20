@@ -13,23 +13,15 @@ namespace Dimensions.Api.Controllers;
 [Route("api/customer")]
 public sealed class CustomerController(
     IConfiguration configuration,
-    ICurrentUserAccessor currentUserAccessor) : ControllerBase
+    ICustomerService customerService) : ControllerBase
 {
     [HttpPost("query")]
-    public IActionResult Query([FromBody] CustomerQueryRequest request)
+    public async Task<IActionResult> Query([FromBody] CustomerQueryRequest request, CancellationToken cancellationToken)
     {
-        var response = new CustomerQueryResponse
-        {
-            CustomerId = string.IsNullOrWhiteSpace(request.CustomerId) ? "CUST-001" : request.CustomerId,
-            CustomerName = request.Keyword is { Length: > 0 }
-                ? $"Customer matched: {request.Keyword}"
-                : "Demo Customer",
-            Status = "Active",
-            QueriedByUserId = currentUserAccessor.GetUserId() ?? string.Empty,
-            QueriedByName = currentUserAccessor.GetDisplayName() ?? string.Empty,
-            DeviceId = HttpContext.Request.Headers[HeaderNames.DeviceId].ToString(),
-            QueriedAt = DateTimeOffset.UtcNow
-        };
+        var response = await customerService.QueryAsync(
+            request,
+            HttpContext.Request.Headers[HeaderNames.DeviceId].ToString(),
+            cancellationToken);
 
         return Ok(ApiResponseFactory.Success(HttpContext, response, configuration["System:SystemCode"] ?? "Dimensions"));
     }

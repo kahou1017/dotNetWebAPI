@@ -13,6 +13,15 @@ seed data 主要不是為了正式環境，而是為了：
 - token / device 規則測試
 - 管理流程演練
 
+目前也建議補一小組業務資料 seed，讓第一個正式業務模組可以直接驗證。
+
+範例：
+
+- `Customer`
+  - `CUST-001 / Demo Customer / Active`
+  - `CUST-900 / VIP Customer / Active`
+  - `CUST-999 / Suspended Customer / Suspended`
+
 ## 建議準備的資料
 
 ### 1. 管理員資料

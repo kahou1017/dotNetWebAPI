@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICurrentUserAccessor, HttpContextCurrentUserAccessor>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IDeviceService, DeviceService>();
         services.AddScoped<IApiLogService, ApiLogService>();
