@@ -47,13 +47,20 @@
 
 ### 1. Token / Device 規則補強
 
-- [ ] 補 `revoke / renew / reissue` 的限制條件
-- [ ] 補 expired token 的驗證邏輯
-- [ ] 補 revoked token 的驗證邏輯
-- [ ] 補 disabled token 的驗證邏輯
-- [ ] 補 single-device token 驗證細節
-- [ ] 補 device 停用後的 token 行為
-- [ ] 補 token 與 device / user 一致性規則
+- [x] 補 `revoke / renew / reissue` 的限制條件
+  Completed: 2026-03-21 00:18
+- [x] 補 expired token 的驗證邏輯
+  Completed: 2026-03-21 00:18
+- [x] 補 revoked token 的驗證邏輯
+  Completed: 2026-03-21 00:18
+- [x] 補 disabled token 的驗證邏輯
+  Completed: 2026-03-21 00:18
+- [x] 補 single-device token 驗證細節
+  Completed: 2026-03-21 00:18
+- [x] 補 device 停用後的 token 行為
+  Completed: 2026-03-21 00:18
+- [x] 補 token 與 device / user 一致性規則
+  Completed: 2026-03-21 00:18
 
 ### 2. 管理 API 與業務 API 切分實作
 
@@ -117,3 +124,8 @@
 
 - 如果不確定目前應先做後端還是前端，預設先做這份
 - `Dimensions.Admin.Web` 的前端工作請看 [01_frontend_todo_list.md](01_frontend_todo_list.md)
+- `DeviceId` 目前先不強制實作，欄位保留即可
+- 單裝置流程暫定為：
+  - 先發 token，不自動綁定
+  - 先從 usage log 觀察候選來源
+  - 後續再由管理頁面手動綁定 device

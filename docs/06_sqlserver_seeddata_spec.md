@@ -91,8 +91,9 @@ seed data 主要不是為了正式環境，而是為了：
 
 目的：
 
-- 驗證 `X-Device-Id`
-- 驗證 token 與 device 綁定
+- 先驗證單裝置欄位與預留流程
+- 後續再驗證 `X-Device-Id`
+- 後續再驗證 token 與 device 正式綁定
 
 ## 新手實作建議
 

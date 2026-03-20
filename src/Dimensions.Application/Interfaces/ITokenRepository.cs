@@ -16,6 +16,12 @@ public interface ITokenRepository
         string tokenType,
         CancellationToken cancellationToken = default);
 
+    Task<TokenDetailResponse?> GetTokenByJwtAsync(
+        string tokenId,
+        string jwtId,
+        string tokenType,
+        CancellationToken cancellationToken = default);
+
     Task InsertTokenAsync(TokenWriteModel token, CancellationToken cancellationToken = default);
 
     Task UpdateTokenStatusAsync(
@@ -24,6 +30,20 @@ public interface ITokenRepository
         bool isRevoked,
         DateTimeOffset? revokedAt,
         DateTimeOffset? expireAt,
+        CancellationToken cancellationToken = default);
+
+    Task UpdateTokenCredentialsAsync(
+        string tokenId,
+        string jwtId,
+        string accessToken,
+        DateTimeOffset issuedAt,
+        DateTimeOffset effectiveAt,
+        DateTimeOffset? expireAt,
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<TokenDetailResponse>> GetActiveSingleDeviceTokensByDeviceAsync(
+        string userId,
+        string deviceId,
         CancellationToken cancellationToken = default);
 
     Task<PagedResult<TokenUsageItemResponse>> GetTokenUsageAsync(TokenUsageRequest request, CancellationToken cancellationToken = default);

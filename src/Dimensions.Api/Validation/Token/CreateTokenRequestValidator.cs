@@ -45,14 +45,12 @@ public sealed class CreateTokenRequestValidator : AbstractValidator<CreateTokenR
             .WithMessage("ExpireAt must be later than EffectiveAt.");
 
         RuleFor(x => x.DeviceId)
-            .NotEmpty()
-            .When(x => x.IsSingleDevice)
-            .WithMessage("DeviceId is required when IsSingleDevice is true.");
+            .MaximumLength(100)
+            .When(x => !string.IsNullOrWhiteSpace(x.DeviceId));
 
         RuleFor(x => x.DeviceName)
-            .NotEmpty()
-            .When(x => x.IsSingleDevice)
-            .WithMessage("DeviceName is required when IsSingleDevice is true.");
+            .MaximumLength(100)
+            .When(x => !string.IsNullOrWhiteSpace(x.DeviceName));
 
         RuleFor(x => x.Purpose)
             .MaximumLength(100)

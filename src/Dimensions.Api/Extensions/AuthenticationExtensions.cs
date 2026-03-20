@@ -58,26 +58,78 @@ public static class AuthenticationExtensions
                             || string.IsNullOrWhiteSpace(jwtId)
                             || string.IsNullOrWhiteSpace(tokenType))
                         {
-                            context.Fail("Required token claims are missing.");
+                            context.Fail("Auth.TokenInvalid");
                             return;
                         }
 
-                        var token = await tokenRepository.GetValidTokenAsync(tokenId, jwtId, tokenType, context.HttpContext.RequestAborted);
+                        var token = await tokenRepository.GetTokenByJwtAsync(tokenId, jwtId, tokenType, context.HttpContext.RequestAborted);
                         if (token is null)
                         {
-                            context.Fail("Token is not active.");
+                            context.Fail("Auth.TokenNotFound");
+                            return;
+                        }
+
+                        if (!token.IsEnabled || token.Status == TokenStatus.Disabled)
+                        {
+                            context.Fail("Auth.TokenDisabled");
+                            return;
+                        }
+
+                        if (token.IsRevoked || token.Status == TokenStatus.Revoked)
+                        {
+                            context.Fail("Auth.TokenRevoked");
+                            return;
+                        }
+
+                        if (token.Status == TokenStatus.Reissued)
+                        {
+                            context.Fail("Auth.TokenInvalid");
+                            return;
+                        }
+
+                        if (token.EffectiveAt > DateTimeOffset.UtcNow)
+                        {
+                            context.Fail("Auth.TokenNotEffective");
+                            return;
+                        }
+
+                        if (token.ExpireAt is not null && token.ExpireAt < DateTimeOffset.UtcNow)
+                        {
+                            if (token.Status == TokenStatus.Active)
+                            {
+                                await tokenRepository.UpdateTokenStatusAsync(
+                                    token.TokenId,
+                                    TokenStatus.Expired,
+                                    token.IsRevoked,
+                                    revokedAt: null,
+                                    expireAt: token.ExpireAt,
+                                    context.HttpContext.RequestAborted);
+                            }
+
+                            context.Fail("Auth.TokenExpired");
+                            return;
+                        }
+
+                        if (token.Status != TokenStatus.Active)
+                        {
+                            context.Fail("Auth.TokenInvalid");
                             return;
                         }
 
                         if (token.IsSingleDevice)
                         {
+                            if (string.IsNullOrWhiteSpace(token.DeviceId))
+                            {
+                                return;
+                            }
+
                             var requestDeviceId = context.HttpContext.Request.Headers[HeaderNames.DeviceId].ToString();
 
                             if (string.IsNullOrWhiteSpace(token.DeviceId)
                                 || string.IsNullOrWhiteSpace(requestDeviceId)
                                 || !string.Equals(token.DeviceId, requestDeviceId, StringComparison.Ordinal))
                             {
-                                context.Fail("Device validation failed.");
+                                context.Fail("Auth.DeviceMismatch");
                                 return;
                             }
 
@@ -88,7 +140,7 @@ public static class AuthenticationExtensions
 
                             if (!hasEnabledDevice)
                             {
-                                context.Fail("Registered device validation failed.");
+                                context.Fail("Auth.DeviceMismatch");
                             }
                         }
                     }

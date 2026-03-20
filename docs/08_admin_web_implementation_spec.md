@@ -73,6 +73,13 @@ Dimensions.Admin.Web
 - 補發 token
 - 續期 token
 
+補充：
+
+- `renew` 成功後，畫面應能取得新的 `accessToken`
+- `DeviceId` 欄位目前先保留，不強制 client 端先提供
+- 第一版可先建立「未綁定 device 的單裝置 token」
+- 後續可由管理頁面從 usage log 挑選候選來源，再做手動綁定
+
 ### 3. Device 管理
 
 頁面：
@@ -85,6 +92,11 @@ Dimensions.Admin.Web
 - 查 device 清單
 - 建立 device
 - 停用 device
+
+補充：
+
+- 停用 device 功能先保留
+- 等正式啟用 device 綁定後，再完整套用綁定 token 的停用規則
 
 ### 4. Log 查詢
 

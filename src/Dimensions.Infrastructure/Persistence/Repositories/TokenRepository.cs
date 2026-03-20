@@ -177,6 +177,54 @@ public sealed class TokenRepository(DapperSqlExecutor sqlExecutor) : ITokenRepos
             cancellationToken: cancellationToken);
     }
 
+    public Task<TokenDetailResponse?> GetTokenByJwtAsync(
+        string tokenId,
+        string jwtId,
+        string tokenType,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            SELECT
+                TokenId,
+                JwtId,
+                TokenType,
+                TokenName,
+                UserId,
+                UserName,
+                Status,
+                IsRevoked,
+                IsSingleDevice,
+                IsEnabled,
+                CanReissue,
+                CanRenew,
+                DeviceId,
+                DeviceName,
+                IssuedAt,
+                EffectiveAt,
+                ExpireAt,
+                LastUsedAt,
+                Purpose,
+                Remark,
+                CreatedBy,
+                CreatedAt
+            FROM Tokens
+            WHERE TokenId = @TokenId
+              AND JwtId = @JwtId
+              AND TokenType = @TokenType
+            LIMIT 1;
+            """;
+
+        return sqlExecutor.QuerySingleOrDefaultAsync<TokenDetailResponse>(
+            sql,
+            new
+            {
+                TokenId = tokenId,
+                JwtId = jwtId,
+                TokenType = tokenType
+            },
+            cancellationToken: cancellationToken);
+    }
+
     public async Task InsertTokenAsync(TokenWriteModel token, CancellationToken cancellationToken = default)
     {
         const string sql = """
@@ -221,6 +269,88 @@ public sealed class TokenRepository(DapperSqlExecutor sqlExecutor) : ITokenRepos
                 ExpireAt = expireAt
             },
             cancellationToken: cancellationToken);
+    }
+
+    public async Task UpdateTokenCredentialsAsync(
+        string tokenId,
+        string jwtId,
+        string accessToken,
+        DateTimeOffset issuedAt,
+        DateTimeOffset effectiveAt,
+        DateTimeOffset? expireAt,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            UPDATE Tokens
+            SET JwtId = @JwtId,
+                AccessToken = @AccessToken,
+                IssuedAt = @IssuedAt,
+                EffectiveAt = @EffectiveAt,
+                ExpireAt = @ExpireAt,
+                Status = 'Active',
+                IsRevoked = 0,
+                RevokedAt = NULL
+            WHERE TokenId = @TokenId;
+            """;
+
+        await sqlExecutor.ExecuteAsync(
+            sql,
+            new
+            {
+                TokenId = tokenId,
+                JwtId = jwtId,
+                AccessToken = accessToken,
+                IssuedAt = issuedAt,
+                EffectiveAt = effectiveAt,
+                ExpireAt = expireAt
+            },
+            cancellationToken: cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<TokenDetailResponse>> GetActiveSingleDeviceTokensByDeviceAsync(
+        string userId,
+        string deviceId,
+        CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            SELECT
+                TokenId,
+                JwtId,
+                TokenType,
+                TokenName,
+                UserId,
+                UserName,
+                Status,
+                IsRevoked,
+                IsSingleDevice,
+                IsEnabled,
+                CanReissue,
+                CanRenew,
+                DeviceId,
+                DeviceName,
+                IssuedAt,
+                EffectiveAt,
+                ExpireAt,
+                LastUsedAt,
+                Purpose,
+                Remark,
+                CreatedBy,
+                CreatedAt
+            FROM Tokens
+            WHERE UserId = @UserId
+              AND DeviceId = @DeviceId
+              AND IsSingleDevice = 1
+              AND IsEnabled = 1
+              AND IsRevoked = 0
+              AND Status = 'Active';
+            """;
+
+        var items = await sqlExecutor.QueryAsync<TokenDetailResponse>(
+            sql,
+            new { UserId = userId, DeviceId = deviceId },
+            cancellationToken: cancellationToken);
+
+        return items;
     }
 
     public async Task<PagedResult<TokenUsageItemResponse>> GetTokenUsageAsync(TokenUsageRequest request, CancellationToken cancellationToken = default)

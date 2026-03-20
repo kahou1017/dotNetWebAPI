@@ -77,6 +77,8 @@ public sealed record ReissueTokenResponse
 public sealed record RenewTokenResponse
 {
     public string TokenId { get; init; } = string.Empty;
+    public string JwtId { get; init; } = string.Empty;
+    public string AccessToken { get; init; } = string.Empty;
     public DateTimeOffset? OldExpireAt { get; init; }
     public DateTimeOffset? NewExpireAt { get; init; }
     public string Status { get; init; } = string.Empty;

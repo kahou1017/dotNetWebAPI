@@ -7,6 +7,26 @@ namespace Dimensions.Infrastructure.Persistence.Repositories;
 
 public sealed class DeviceRepository(DapperSqlExecutor sqlExecutor) : IDeviceRepository
 {
+    public Task<DeviceListItemResponse?> GetDeviceByIdAsync(string deviceId, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            SELECT
+                UserId,
+                DeviceId,
+                DeviceName,
+                DeviceType,
+                IsEnabled
+            FROM Devices
+            WHERE DeviceId = @DeviceId
+            LIMIT 1;
+            """;
+
+        return sqlExecutor.QuerySingleOrDefaultAsync<DeviceListItemResponse>(
+            sql,
+            new { DeviceId = deviceId },
+            cancellationToken: cancellationToken);
+    }
+
     public async Task<PagedResult<DeviceListItemResponse>> GetDeviceListAsync(DeviceListRequest request, CancellationToken cancellationToken = default)
     {
         var pageNo = request.PageNo <= 0 ? 1 : request.PageNo;

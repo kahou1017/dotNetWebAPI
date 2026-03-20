@@ -120,9 +120,10 @@
 
 當 `IsSingleDevice = 1`：
 
-- token 需要對應 `DeviceId`
-- request 需要帶 `X-Device-Id`
-- request device 必須與資料表綁定一致
+- `DeviceId` 欄位先保留
+- 第一版可先不綁定 `DeviceId`
+- 後續若正式啟用綁定，再要求 request 帶 `X-Device-Id`
+- 到那個階段，request device 才需要與資料表綁定一致
 
 ## 新手先看哪裡
 

@@ -12,6 +12,7 @@
 - Development 環境使用 SQLite
 - 已完成 request validation
 - 已完成 Swagger / OpenAPI
+- 已完成第一波 token / device 規則補強
 - 已整理新版正式文件到 `docs/`
 
 ## 目前架構方向
@@ -169,6 +170,21 @@ SQLite 檔案位置：
 - `CreateDeviceRequest`
 - `DisableDeviceRequest`
 - `CustomerQueryRequest`
+
+## Token / Device 規則現況
+
+目前已補上的重點：
+
+- `revoke / renew / reissue` 已加入基本前置條件檢查
+- `renew` 會簽發新的 JWT 與 `jti`
+- 驗章時會明確處理 `Revoked / Expired / Disabled / Reissued`
+
+目前採用的過渡策略：
+
+- `DeviceId` 欄位先保留，但第一版暫不強制實作
+- 單裝置 token 可先建立為未綁定狀態
+- 後續可由管理頁面根據 usage log 觀察候選來源
+- 等流程定案後，再補正式 device 綁定
 
 ## Logging
 

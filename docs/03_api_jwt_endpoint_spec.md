@@ -56,11 +56,17 @@ Authorization: Bearer {token}
 
 ### Device Header
 
-當 token 是單裝置綁定時，需要帶：
+目前先保留這個 header，但第一版暫不強制：
 
 ```text
 X-Device-Id: {device-id}
 ```
+
+補充說明：
+
+- `DeviceId` 欄位先保留
+- 第一版不要求 client 端一定先實作 `DeviceId`
+- 後續若正式啟用綁定，再要求固定帶入
 
 ## Token 類型
 
@@ -174,7 +180,8 @@ Policy：
 - 驗 token 類型
 - 驗 scope
 - 驗 effective / expire 時間
-- 如果是單裝置 token，驗 `X-Device-Id`
+- 目前不強制 `DeviceId`
+- 後續若 token 已完成正式綁定，再驗 `X-Device-Id`
 
 ## Token 管理規則
 
@@ -191,13 +198,27 @@ Policy：
 
 這些操作只屬於 `Dimensions.Admin.Api`。
 
+補充說明：
+
+- `revoke`
+  - 會將 token 改成 `Revoked`
+- `reissue`
+  - 會建立新的 `TokenId` 與新的 JWT
+  - 舊 token 會改成 `Reissued`
+- `renew`
+  - 會保留原本的 `TokenId`
+  - 但會簽發新的 JWT 與新的 `jti`
+  - 回應中應包含新的 `accessToken`
+
 ### 單裝置綁定
 
 當 `IsSingleDevice = true`：
 
-- `DeviceId` 必填
-- 業務 API request 必須帶 `X-Device-Id`
-- request 帶入的 device 必須與 DB 綁定資料一致
+- `DeviceId` 欄位先保留，但第一版可為空
+- 第一版先採「先發 token、不自動綁定」方式
+- 管理頁面可先從 token usage log 觀察候選來源
+- 後續再由管理端手動決定是否綁定特定 device
+- 一旦未來完成正式綁定，再要求業務 API request 帶 `X-Device-Id`
 
 ## JWT Claim 最低需求
 

@@ -69,5 +69,5 @@
 例如：
 
 - 管理員登入要有帳號
-- 單裝置 token 要有對應 device
+- 單裝置 token 的 `DeviceId` 欄位目前可先保留
 - token 清單頁要先有 token 可以查
