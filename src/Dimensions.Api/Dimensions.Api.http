@@ -1,0 +1,6 @@
+@Dimensions.Api_HostAddress = http://localhost:5249
+
+GET {{Dimensions.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

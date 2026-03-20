@@ -1,0 +1,31 @@
+# Build output
+bin/
+obj/
+
+# Local tooling cache
+.dotnet/
+
+# VS Code workspace files
+.vscode/*
+!.vscode/extensions.json
+
+# Rider / Visual Studio
+.idea/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+Logs/
+*.log
+
+# Local databases
+*.db
+*.db-shm
+*.db-wal
+
+# OS files
+Thumbs.db
+Desktop.ini
