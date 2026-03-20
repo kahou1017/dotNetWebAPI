@@ -65,7 +65,8 @@ Checklist:
   Completed: 2026-03-20 21:12:24 +08:00
 - [x] 將 validation failure 整合進既有 exception / response pipeline
   Completed: 2026-03-20 21:12:24 +08:00
-- [ ] 規劃第二批 request validators
+- [x] 規劃第二批 request validators
+  Completed: 2026-03-20 22:00:00 +08:00
 
 原因：
 - 現在 API 可跑，但輸入邊界仍偏鬆
