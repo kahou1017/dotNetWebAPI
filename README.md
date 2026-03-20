@@ -56,6 +56,18 @@ dotnet build .\Dimensions.slnx --no-restore
 dotnet run --project .\src\Dimensions.Api
 ```
 
+4. 開啟 Swagger
+
+啟動後可直接在瀏覽器打開：
+
+- `http://localhost:<port>/swagger`
+
+如果要測試受保護 API，可先透過 `POST /api/auth/login` 取得 JWT，再用 Swagger 右上角 `Authorize` 貼上：
+
+```text
+Bearer {token}
+```
+
 ## 開發模式資料庫
 
 Development 預設設定在 [appsettings.Development.json](d:/Git/dotNetWebAPI/src/Dimensions.Api/appsettings.Development.json)：
@@ -104,6 +116,12 @@ Development 預設設定在 [appsettings.Development.json](d:/Git/dotNetWebAPI/s
 - API 使用 `log4net`
 - 設定檔在 [`src/Dimensions.Api/log4net.config`](d:/Git/dotNetWebAPI/src/Dimensions.Api/log4net.config)
 - 本機 log 會寫入 `Logs/`
+
+## Swagger / OpenAPI
+
+- 開發環境可使用 `/swagger`
+- 已支援 JWT Bearer Authorize 按鈕
+- 可直接測試 `Auth / Token / Device / Customer` API
 
 ## VS Code
 

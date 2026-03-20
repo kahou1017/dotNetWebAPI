@@ -13,6 +13,7 @@ builder.Logging.AddLog4Net("log4net.config");
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDimensionsSwagger();
 builder.Services.AddDimensionsServices(builder.Configuration);
 builder.Services.AddDimensionsAuthentication(builder.Configuration);
 builder.Services.AddCors(options =>
@@ -27,6 +28,7 @@ var app = builder.Build();
 
 await app.Services.InitializeDimensionsDatabaseAsync();
 
+app.UseDimensionsSwagger();
 app.UseCors("DefaultCors");
 app.UseMiddleware<CaseIdMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
