@@ -1,15 +1,15 @@
-using Dimensions.Api.Policies;
-using Dimensions.Api.Responses;
+﻿using Dimensions.Admin.Api.Policies;
+using Dimensions.Admin.Api.Responses;
 using Dimensions.Application.Interfaces;
 using Dimensions.Contracts.Device;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dimensions.Api.Controllers;
+namespace Dimensions.Admin.Api.Controllers;
 
 [ApiController]
 [Authorize(Policy = PolicyNames.TokenManage)]
-[Route("api/device")]
+[Route("admin-api/device")]
 public sealed class DeviceController(IDeviceService deviceService, IConfiguration configuration) : ControllerBase
 {
     [HttpPost("list")]
@@ -29,3 +29,4 @@ public sealed class DeviceController(IDeviceService deviceService, IConfiguratio
 
     private string GetSystemCode() => configuration["System:SystemCode"] ?? "Dimensions";
 }
+

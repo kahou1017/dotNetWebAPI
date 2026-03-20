@@ -1,15 +1,15 @@
-using Dimensions.Api.Policies;
-using Dimensions.Api.Responses;
+﻿using Dimensions.Admin.Api.Policies;
+using Dimensions.Admin.Api.Responses;
 using Dimensions.Application.Interfaces;
 using Dimensions.Contracts.Token;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dimensions.Api.Controllers;
+namespace Dimensions.Admin.Api.Controllers;
 
 [ApiController]
 [Authorize(Policy = PolicyNames.TokenManage)]
-[Route("api/token")]
+[Route("admin-api/token")]
 public sealed class TokenController(ITokenService tokenService, IConfiguration configuration) : ControllerBase
 {
     [HttpPost("list")]
@@ -46,3 +46,4 @@ public sealed class TokenController(ITokenService tokenService, IConfiguration c
 
     private string GetSystemCode() => configuration["System:SystemCode"] ?? "Dimensions";
 }
+

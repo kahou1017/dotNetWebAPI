@@ -37,6 +37,7 @@
 ### 目前已建立的專案
 
 - `Dimensions.Api`
+- `Dimensions.Admin.Api`
 - `Dimensions.Application`
 - `Dimensions.Contracts`
 - `Dimensions.Domain`
@@ -46,7 +47,6 @@
 
 ### 已定案、待建立的專案
 
-- `Dimensions.Admin.Api`
 - `Dimensions.Admin.Web`
 - `Dimensions.Admin.Api.Tests`
 
@@ -58,6 +58,7 @@
 Dimensions.slnx
 src/
   Dimensions.Api
+  Dimensions.Admin.Api
   Dimensions.Application
   Dimensions.Contracts
   Dimensions.Domain
@@ -71,7 +72,6 @@ tests/
 
 ```text
 src/
-  Dimensions.Admin.Api
   Dimensions.Admin.Web
 tests/
   Dimensions.Admin.Api.Tests
@@ -130,28 +130,26 @@ SQLite 檔案位置：
 
 ### 目前已存在
 
+- `POST /admin-api/auth/login`
+- `GET /admin-api/auth/me`
+- `POST /admin-api/token/*`
+- `POST /admin-api/device/*`
 - `POST /api/customer/query`
 - `GET /api/public/{resource}`
 
-### 目前程式碼仍保留的過渡骨架
-
-目前程式碼裡還留有舊版 `Auth / Token / Device` 骨架，後續會依正式文件逐步切分到：
-
-- `Dimensions.Admin.Api`
-- `Dimensions.Admin.Web`
-
-也就是說：
-
-- 現行程式碼不完全等於最新正式文件
-- 正式方向請以 `docs/` 下的文件為主
-
-### 已定案、待切分的 API 入口
+### 已切分完成的管理 API 入口
 
 - `Dimensions.Admin.Api`
   - admin login
   - token 管理
   - device 管理
   - 管理查詢 API
+
+### 已定案、待切分的 API 入口
+
+- `Dimensions.Admin.Web`
+  - 管理前端
+  - 呼叫 `Dimensions.Admin.Api`
 
 ## Request Validation
 

@@ -64,12 +64,18 @@
 
 ### 2. 管理 API 與業務 API 切分實作
 
-- [ ] 建立 `Dimensions.Admin.Api`
-- [ ] 將 admin login 移到 `Dimensions.Admin.Api`
-- [ ] 將 `TokenController` 移到 `Dimensions.Admin.Api`
-- [ ] 將 `DeviceController` 移到 `Dimensions.Admin.Api`
-- [ ] 調整 `Dimensions.Api` 只保留業務 API
-- [ ] 調整 route 與 Swagger
+- [x] 建立 `Dimensions.Admin.Api`
+  Completed: 2026-03-21 00:34
+- [x] 將 admin login 移到 `Dimensions.Admin.Api`
+  Completed: 2026-03-21 00:34
+- [x] 將 `TokenController` 移到 `Dimensions.Admin.Api`
+  Completed: 2026-03-21 00:34
+- [x] 將 `DeviceController` 移到 `Dimensions.Admin.Api`
+  Completed: 2026-03-21 00:34
+- [x] 調整 `Dimensions.Api` 只保留業務 API
+  Completed: 2026-03-21 00:34
+- [x] 調整 route 與 Swagger
+  Completed: 2026-03-21 00:34
 
 ## Priority 2
 

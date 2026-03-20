@@ -18,6 +18,7 @@
 ## 目前已建立的 project
 
 - `Dimensions.Api`
+- `Dimensions.Admin.Api`
 - `Dimensions.Application`
 - `Dimensions.Domain`
 - `Dimensions.Infrastructure`
@@ -31,7 +32,6 @@
 
 以下 project 是架構上已定案，但目前尚未建立的專案：
 
-- `Dimensions.Admin.Api`
 - `Dimensions.Admin.Web`
 - `Dimensions.Admin.Api.Tests`
 
@@ -46,6 +46,26 @@
 - Swagger
 - request validation
 - logging
+
+常見套件：
+
+- `FluentValidation.DependencyInjectionExtensions`
+  - request validation
+- `Microsoft.AspNetCore.Authentication.JwtBearer`
+  - JWT bearer authentication
+- `Microsoft.Extensions.Logging.Log4Net.AspNetCore`
+  - `log4net` provider
+- `Swashbuckle.AspNetCore`
+  - Swagger / OpenAPI
+
+## Dimensions.Admin.Api
+
+主要用途：
+
+- 管理員登入
+- token 管理 API
+- device 管理 API
+- admin 專用 Swagger 與 logging
 
 常見套件：
 
@@ -93,7 +113,8 @@
 
 如果你只想先理解一件事，可以先記住：
 
-- API 相關功能大多看 `Dimensions.Api`
+- 業務 API 相關功能大多看 `Dimensions.Api`
+- 管理端 API 相關功能大多看 `Dimensions.Admin.Api`
 - DB 相關功能大多看 `Dimensions.Infrastructure`
 
-等之後 `Dimensions.Admin.Api` 與 `Dimensions.Admin.Web` 建好，再把它們的套件一起補進來。
+等之後 `Dimensions.Admin.Web` 建好，再把它的套件一起補進來。

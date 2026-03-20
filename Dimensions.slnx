@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Dimensions.Api/Dimensions.Api.csproj" />
+    <Project Path="src/Dimensions.Admin.Api/Dimensions.Admin.Api.csproj" />
     <Project Path="src/Dimensions.Application/Dimensions.Application.csproj" />
     <Project Path="src/Dimensions.Contracts/Dimensions.Contracts.csproj" />
     <Project Path="src/Dimensions.Domain/Dimensions.Domain.csproj" />

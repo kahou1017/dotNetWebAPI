@@ -1,14 +1,14 @@
-using Dimensions.Api.Policies;
-using Dimensions.Api.Responses;
+﻿using Dimensions.Admin.Api.Policies;
+using Dimensions.Admin.Api.Responses;
 using Dimensions.Application.Interfaces;
 using Dimensions.Contracts.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Dimensions.Api.Controllers;
+namespace Dimensions.Admin.Api.Controllers;
 
 [ApiController]
-[Route("api/auth")]
+[Route("admin-api/auth")]
 public sealed class AuthController(IAuthService authService, IConfiguration configuration) : ControllerBase
 {
     [AllowAnonymous]
@@ -38,3 +38,4 @@ public sealed class AuthController(IAuthService authService, IConfiguration conf
 
     private string GetSystemCode() => configuration["System:SystemCode"] ?? "Dimensions";
 }
+
