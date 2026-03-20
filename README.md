@@ -1,19 +1,57 @@
 # dotNetWebAPI
 
-`Dimensions` 是目前開發中的 `.NET 10` WebAPI 專案，主線開發以 `develop` 分支為主，`main` 暫不異動。
+`Dimensions` 是目前開發中的 `.NET 10` WebAPI 專案。
 
-## Current Status
+目前主線以 `develop` 分支為主，`main` 暫不異動。
 
-- 已完成 `Api / Application / Domain / Infrastructure / Contracts / tests` 分層骨架
-- 已接上 `log4net` 本機檔案 logging
-- 已接上 `JWT Bearer` 驗章、DB token 狀態檢查與 authorization policy
-- Development 環境已切到 `SQLite`
-- 已完成 SQLite 啟動建表與基本 seed
-- 已完成 `Auth / Token / Device / Customer / Public` API skeleton
+## 專案現況
+
+- 已完成 `Dimensions.Api / Application / Domain / Infrastructure / Contracts / tests` 基本骨架
+- 已接上 `log4net`
+- 已接上 JWT Bearer 驗證
+- Development 環境使用 SQLite
+- 已完成 request validation
 - 已完成 Swagger / OpenAPI
-- 已完成第一批與第二批 request validation
+- 已整理新版正式文件到 `docs/`
 
-## Solution Structure
+## 目前架構方向
+
+- `Dimensions.Api`
+  - 只提供業務 API
+  - 不提供 login API
+  - 只驗 token，不簽發 token
+
+- `Dimensions.Admin.Api`
+  - 提供管理員登入
+  - 管理 token
+  - 管理 device
+  - 提供管理查詢 API
+
+- `Dimensions.Admin.Web`
+  - 採用 ASP.NET Core MVC
+  - 呼叫 `Dimensions.Admin.Api`
+
+## 專案建立狀態
+
+### 目前已建立的專案
+
+- `Dimensions.Api`
+- `Dimensions.Application`
+- `Dimensions.Contracts`
+- `Dimensions.Domain`
+- `Dimensions.Infrastructure`
+- `Dimensions.Api.Tests`
+- `Dimensions.Application.Tests`
+
+### 已定案、待建立的專案
+
+- `Dimensions.Admin.Api`
+- `Dimensions.Admin.Web`
+- `Dimensions.Admin.Api.Tests`
+
+## Solution 結構
+
+### 目前已建立
 
 ```text
 Dimensions.slnx
@@ -28,7 +66,17 @@ tests/
   Dimensions.Application.Tests
 ```
 
-## Tech Stack
+### 已定案、待建立
+
+```text
+src/
+  Dimensions.Admin.Api
+  Dimensions.Admin.Web
+tests/
+  Dimensions.Admin.Api.Tests
+```
+
+## 技術棧
 
 - `.NET 10`
 - ASP.NET Core Web API
@@ -37,7 +85,7 @@ tests/
 - FluentValidation
 - log4net
 
-## Local Run
+## 本機啟動
 
 1. Restore
 
@@ -61,53 +109,48 @@ dotnet run --project .\src\Dimensions.Api
 
 - `http://localhost:<port>/swagger`
 
-如果要測受保護 API，先呼叫 `POST /api/auth/login` 取得 JWT，再到 Swagger 右上角 `Authorize` 輸入：
-
-```text
-Bearer {token}
-```
-
 ## Development Database
 
-Development 預設使用 [appsettings.Development.json](d:/Git/dotNetWebAPI/src/Dimensions.Api/appsettings.Development.json)：
+Development 預設使用 [appsettings.Development.json](src/Dimensions.Api/appsettings.Development.json)：
 
 - `Provider`: `Sqlite`
 - `ConnectionStrings:DefaultConnection`: `Data Source=dimensions-dev.db;Cache=Shared;Foreign Keys=True`
 
 SQLite 檔案位置：
 
-- [dimensions-dev.db](d:/Git/dotNetWebAPI/src/Dimensions.Api/dimensions-dev.db)
+- [dimensions-dev.db](src/Dimensions.Api/dimensions-dev.db)
 
-## Seed Accounts
+## Seed 帳號
 
 - `admin / admin`
 - `admin2 / admin2`
 
-## Current APIs
+## 目前 API 狀態
 
-- `POST /api/auth/login`
-- `GET /api/auth/me`
-- `POST /api/token/list`
-- `POST /api/token/detail`
-- `POST /api/token/create`
-- `POST /api/token/revoke`
-- `POST /api/token/reissue`
-- `POST /api/token/renew`
-- `POST /api/token/usage`
-- `POST /api/token/action-log`
-- `POST /api/device/list`
-- `POST /api/device/create`
-- `POST /api/device/disable`
+### 目前已存在
+
 - `POST /api/customer/query`
 - `GET /api/public/{resource}`
 
-## Auth Rules
+### 目前程式碼仍保留的過渡骨架
 
-- `POST /api/auth/login` 會回傳 JWT bearer token
-- 受保護 API 會先做 JWT 驗章，再回查 DB token 狀態
-- 單裝置 token 需要在 request header 帶 `X-Device-Id`
-- 驗證成功的受保護請求會寫 usage log，並更新 token 的 `LastUsedAt`
-- `POST /api/customer/query` 用來驗證一般使用者 token 的受保護業務流程
+目前程式碼裡還留有舊版 `Auth / Token / Device` 骨架，後續會依正式文件逐步切分到：
+
+- `Dimensions.Admin.Api`
+- `Dimensions.Admin.Web`
+
+也就是說：
+
+- 現行程式碼不完全等於最新正式文件
+- 正式方向請以 `docs/` 下的文件為主
+
+### 已定案、待切分的 API 入口
+
+- `Dimensions.Admin.Api`
+  - admin login
+  - token 管理
+  - device 管理
+  - 管理查詢 API
 
 ## Request Validation
 
@@ -130,7 +173,7 @@ SQLite 檔案位置：
 ## Logging
 
 - API 使用 `log4net`
-- 設定檔在 [log4net.config](d:/Git/dotNetWebAPI/src/Dimensions.Api/log4net.config)
+- 設定檔在 [log4net.config](src/Dimensions.Api/log4net.config)
 - 本機 log 會寫到 `Logs/`
 
 ## Swagger / OpenAPI
@@ -140,30 +183,39 @@ SQLite 檔案位置：
 
 ## VS Code
 
-VS Code 工作區推薦設定在 [extensions.json](d:/Git/dotNetWebAPI/.vscode/extensions.json)。
-
-目前已推薦 SQLite 檢視相關外掛，方便直接查看 `.db` 檔。
+VS Code 工作區推薦設定在 [extensions.json](.vscode/extensions.json)。
 
 ## Git Flow
 
 - `develop`: 目前主線開發分支
 - `main`: 暫不異動
 
-目前所有開發變更先進 `develop`，確認穩定後再決定是否整理到 `main`。
+## 文件入口
 
-## Documentation Rule
+正式文件請從這裡開始：
 
-- 每次寫 code，如果有影響使用方式、設定、流程或文件內容，會一併檢查 `README.md` 是否需要同步修正
-- 若修改 `docs/` 內文件，也會一起確認 `README.md` 是否需要補充入口或說明
+- [00_master_index.md](docs/00_master_index.md)
 
-## Planning Entry
+如果你想先看每個 `src` project 與目錄用途，可以接著看：
 
-後端主線 TODO：
+- [09_project_structure_guide.md](docs/09_project_structure_guide.md)
 
-- [00_backend_todo_list.md](d:/Git/dotNetWebAPI/docs/planning/00_backend_todo_list.md)
+開發待辦請看：
 
-以下文件屬於其他 thread，暫不納入目前後端主線提交：
+- [README.md](planning/README.md)
+- [00_backend_todo_list.md](planning/00_backend_todo_list.md)
+- [01_frontend_todo_list.md](planning/01_frontend_todo_list.md)
 
-- [8_admin_web_implementation_spec_v1.md](d:/Git/dotNetWebAPI/docs/v1_1/8_admin_web_implementation_spec_v1.md)
-- [9_admin_web_development_todo_v1.md](d:/Git/dotNetWebAPI/docs/v1_1/9_admin_web_development_todo_v1.md)
-- [01_frontend_todo_list.md](d:/Git/dotNetWebAPI/docs/planning/01_frontend_todo_list.md)
+## 舊版文件說明
+
+以下資料夾目前視為舊版素材：
+
+- `docs/v1_1/`
+
+可以拿來參考，但不作為正式閱讀入口。
+
+## 文件維護規則
+
+- 每次寫 code，如果有影響使用方式、設定、流程或文件內容，會一起檢查 `README.md`
+- 正式規格文件以 `docs/` 為主
+- 工作追蹤與待辦以 `planning/` 為主
