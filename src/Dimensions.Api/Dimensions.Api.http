@@ -1,6 +1,66 @@
 @Dimensions.Api_HostAddress = http://localhost:5249
+@AdminAccount = admin
+@AdminPassword = admin
+@DeviceId = DEVICE-001
 
-GET {{Dimensions.Api_HostAddress}}/weatherforecast/
+### Admin Login
+POST {{Dimensions.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "loginAccount": "{{AdminAccount}}",
+  "password": "{{AdminPassword}}"
+}
+
+### Public API
+GET {{Dimensions.Api_HostAddress}}/api/public/system-info
 Accept: application/json
 
-###
+### Admin Me
+GET {{Dimensions.Api_HostAddress}}/api/auth/me
+Accept: application/json
+Authorization: Bearer {{admin_token}}
+
+### Create User Token
+POST {{Dimensions.Api_HostAddress}}/api/token/create
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "tokenType": "UserAccess",
+  "userId": "USER001",
+  "userName": "Kevin",
+  "tokenName": "Kevin Main Token",
+  "isSingleDevice": true,
+  "deviceId": "{{DeviceId}}",
+  "deviceName": "Kevin Laptop",
+  "effectiveAt": "2026-03-20T00:00:00Z",
+  "expireAt": "2026-12-31T23:59:59Z",
+  "isPermanent": false,
+  "canReissue": true,
+  "canRenew": true,
+  "purpose": "CustomerQuery",
+  "remark": "Created from .http"
+}
+
+### User Protected Business API
+POST {{Dimensions.Api_HostAddress}}/api/customer/query
+Content-Type: application/json
+Authorization: Bearer {{user_token}}
+X-Device-Id: {{DeviceId}}
+
+{
+  "customerId": "CUST-001",
+  "keyword": "Kevin"
+}
+
+### Token Usage
+POST {{Dimensions.Api_HostAddress}}/api/token/usage
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "tokenId": "{{user_token_id}}",
+  "pageNo": 1,
+  "pageSize": 20
+}

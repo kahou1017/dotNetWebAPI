@@ -11,4 +11,8 @@ public interface ICurrentUserAccessor
     string? GetScope();
 
     string? GetTokenType();
+
+    string? GetTokenId();
+
+    string? GetJwtId();
 }

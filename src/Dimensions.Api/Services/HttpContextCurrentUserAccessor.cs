@@ -16,6 +16,10 @@ internal sealed class HttpContextCurrentUserAccessor(IHttpContextAccessor httpCo
 
     public string? GetTokenType() => GetClaimValue(ClaimNames.TokenType);
 
+    public string? GetTokenId() => GetClaimValue(ClaimNames.TokenId);
+
+    public string? GetJwtId() => GetClaimValue(ClaimNames.JwtId);
+
     private string? GetClaimValue(string claimType)
     {
         var user = httpContextAccessor.HttpContext?.User;

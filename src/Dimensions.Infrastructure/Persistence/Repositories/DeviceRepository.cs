@@ -97,4 +97,22 @@ public sealed class DeviceRepository(DapperSqlExecutor sqlExecutor) : IDeviceRep
             new { DeviceId = deviceId, UpdatedAt = DateTimeOffset.UtcNow },
             cancellationToken: cancellationToken);
     }
+
+    public async Task<bool> HasEnabledDeviceAsync(string userId, string deviceId, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            SELECT COUNT(1)
+            FROM Devices
+            WHERE UserId = @UserId
+              AND DeviceId = @DeviceId
+              AND IsEnabled = 1;
+            """;
+
+        var count = await sqlExecutor.QuerySingleOrDefaultAsync<int>(
+            sql,
+            new { UserId = userId, DeviceId = deviceId },
+            cancellationToken: cancellationToken);
+
+        return count > 0;
+    }
 }

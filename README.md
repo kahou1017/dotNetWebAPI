@@ -89,6 +89,15 @@ Development 預設設定在 [appsettings.Development.json](d:/Git/dotNetWebAPI/s
 - `POST /api/device/list`
 - `POST /api/device/create`
 - `POST /api/device/disable`
+- `POST /api/customer/query`
+
+## 目前驗證規則
+
+- `POST /api/auth/login` 會簽發真實 JWT bearer token
+- 受保護 API 會進行 JWT 驗章，並回查 DB token 狀態
+- 若 token 為單裝置模式，request 需帶 `X-Device-Id`
+- 已驗證成功的 token 請求會寫入 usage log，並更新 token 的 `LastUsedAt`
+- `POST /api/customer/query` 可用來測試一般使用者 token 的受保護業務流程
 
 ## Logging
 

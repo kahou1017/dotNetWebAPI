@@ -31,4 +31,8 @@ public interface ITokenRepository
     Task<PagedResult<TokenActionLogItemResponse>> GetTokenActionLogAsync(TokenActionLogRequest request, CancellationToken cancellationToken = default);
 
     Task InsertActionLogAsync(TokenActionLogItemResponse item, CancellationToken cancellationToken = default);
+
+    Task UpdateLastUsedAtAsync(string tokenId, DateTimeOffset lastUsedAt, CancellationToken cancellationToken = default);
+
+    Task InsertUsageLogAsync(TokenUsageItemResponse item, CancellationToken cancellationToken = default);
 }

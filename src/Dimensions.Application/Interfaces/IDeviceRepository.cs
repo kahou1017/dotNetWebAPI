@@ -11,4 +11,6 @@ public interface IDeviceRepository
     Task<DeviceListItemResponse> UpsertDeviceAsync(DeviceWriteModel device, CancellationToken cancellationToken = default);
 
     Task DisableDeviceAsync(string deviceId, CancellationToken cancellationToken = default);
+
+    Task<bool> HasEnabledDeviceAsync(string userId, string deviceId, CancellationToken cancellationToken = default);
 }

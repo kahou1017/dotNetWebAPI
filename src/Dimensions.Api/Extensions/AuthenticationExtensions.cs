@@ -1,6 +1,7 @@
 using System.Text;
 using Dimensions.Api.Options;
 using Dimensions.Api.Policies;
+using Dimensions.Application.Interfaces;
 using Dimensions.Domain.Constants;
 using Dimensions.Domain.Enums;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,7 +48,8 @@ public static class AuthenticationExtensions
                 {
                     OnTokenValidated = async context =>
                     {
-                        var tokenRepository = context.HttpContext.RequestServices.GetRequiredService<Dimensions.Application.Interfaces.ITokenRepository>();
+                        var tokenRepository = context.HttpContext.RequestServices.GetRequiredService<ITokenRepository>();
+                        var deviceRepository = context.HttpContext.RequestServices.GetRequiredService<IDeviceRepository>();
                         var tokenId = context.Principal?.FindFirst(ClaimNames.TokenId)?.Value;
                         var jwtId = context.Principal?.FindFirst(ClaimNames.JwtId)?.Value;
                         var tokenType = context.Principal?.FindFirst(ClaimNames.TokenType)?.Value;
@@ -64,6 +66,30 @@ public static class AuthenticationExtensions
                         if (token is null)
                         {
                             context.Fail("Token is not active.");
+                            return;
+                        }
+
+                        if (token.IsSingleDevice)
+                        {
+                            var requestDeviceId = context.HttpContext.Request.Headers[HeaderNames.DeviceId].ToString();
+
+                            if (string.IsNullOrWhiteSpace(token.DeviceId)
+                                || string.IsNullOrWhiteSpace(requestDeviceId)
+                                || !string.Equals(token.DeviceId, requestDeviceId, StringComparison.Ordinal))
+                            {
+                                context.Fail("Device validation failed.");
+                                return;
+                            }
+
+                            var hasEnabledDevice = await deviceRepository.HasEnabledDeviceAsync(
+                                token.UserId,
+                                requestDeviceId,
+                                context.HttpContext.RequestAborted);
+
+                            if (!hasEnabledDevice)
+                            {
+                                context.Fail("Registered device validation failed.");
+                            }
                         }
                     }
                 };

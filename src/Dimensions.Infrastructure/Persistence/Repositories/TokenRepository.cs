@@ -362,4 +362,30 @@ public sealed class TokenRepository(DapperSqlExecutor sqlExecutor) : ITokenRepos
 
         await sqlExecutor.ExecuteAsync(sql, item, cancellationToken: cancellationToken);
     }
+
+    public async Task UpdateLastUsedAtAsync(string tokenId, DateTimeOffset lastUsedAt, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            UPDATE Tokens
+            SET LastUsedAt = @LastUsedAt
+            WHERE TokenId = @TokenId;
+            """;
+
+        await sqlExecutor.ExecuteAsync(
+            sql,
+            new { TokenId = tokenId, LastUsedAt = lastUsedAt },
+            cancellationToken: cancellationToken);
+    }
+
+    public async Task InsertUsageLogAsync(TokenUsageItemResponse item, CancellationToken cancellationToken = default)
+    {
+        const string sql = """
+            INSERT INTO TokenUsageLogs (
+                CaseId, TokenId, UserId, RequestTime, HttpMethod, RequestPath, ClientIp, DeviceId, IsSuccess, FailureReason)
+            VALUES (
+                @CaseId, @TokenId, @UserId, @RequestTime, @HttpMethod, @RequestPath, @ClientIp, @DeviceId, @IsSuccess, @FailureReason);
+            """;
+
+        await sqlExecutor.ExecuteAsync(sql, item, cancellationToken: cancellationToken);
+    }
 }

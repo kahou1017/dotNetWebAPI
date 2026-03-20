@@ -1,5 +1,7 @@
 using Dimensions.Api.Responses;
 using Dimensions.Application.Interfaces;
+using Dimensions.Application.Models;
+using Dimensions.Domain.Constants;
 
 namespace Dimensions.Api.Middleware;
 
@@ -8,9 +10,18 @@ public sealed class ApiRequestLogMiddleware(RequestDelegate next, ILogger<ApiReq
     public async Task InvokeAsync(HttpContext context, IApiLogService apiLogService)
     {
         var caseId = ApiResponseFactory.GetCaseId(context);
-        await apiLogService.LogRequestAsync(context.Request.Path, context.Request.Method, caseId, context.RequestAborted);
-
         await next(context);
+        await apiLogService.LogRequestAsync(
+            new ApiRequestLogEntry
+            {
+                CaseId = caseId,
+                Path = context.Request.Path,
+                Method = context.Request.Method,
+                StatusCode = context.Response.StatusCode,
+                ClientIp = context.Connection.RemoteIpAddress?.ToString(),
+                DeviceId = context.Request.Headers[HeaderNames.DeviceId].ToString()
+            },
+            context.RequestAborted);
 
         logger.LogInformation(
             "Handled request {Method} {Path} with status {StatusCode} ({CaseId})",
