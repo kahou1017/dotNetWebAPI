@@ -101,7 +101,8 @@
   Completed: 2026-03-21 00:18
 - [x] API request log 寫入 DB
   Completed: 2026-03-21 02:14
-- [ ] API exception log 寫入 DB
+- [x] API exception log 寫入 DB
+  Completed: 2026-03-21 03:00
 - [ ] request / response payload log 寫入 DB
 - [ ] sensitive data masking 規則
 - [ ] 管理端 log 查詢 API

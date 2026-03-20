@@ -80,6 +80,26 @@ public sealed class DatabaseInitializer(
             CREATE INDEX IF NOT EXISTS IX_ApiRequestLogs_RequestTime ON ApiRequestLogs(RequestTime);
             CREATE INDEX IF NOT EXISTS IX_ApiRequestLogs_TokenId ON ApiRequestLogs(TokenId);
 
+            CREATE TABLE IF NOT EXISTS ApiExceptionLogs (
+                CaseId TEXT NOT NULL PRIMARY KEY,
+                OccurredAt TEXT NOT NULL,
+                HttpMethod TEXT NOT NULL,
+                RequestPath TEXT NOT NULL,
+                StatusCode INTEGER NOT NULL,
+                ExceptionType TEXT NOT NULL,
+                ErrorCode TEXT NULL,
+                ErrorMessage TEXT NOT NULL,
+                ClientIp TEXT NULL,
+                DeviceId TEXT NULL,
+                IsAuthenticated INTEGER NOT NULL,
+                TokenId TEXT NULL,
+                UserId TEXT NULL,
+                TokenType TEXT NULL
+            );
+
+            CREATE INDEX IF NOT EXISTS IX_ApiExceptionLogs_OccurredAt ON ApiExceptionLogs(OccurredAt);
+            CREATE INDEX IF NOT EXISTS IX_ApiExceptionLogs_TokenId ON ApiExceptionLogs(TokenId);
+
             CREATE TABLE IF NOT EXISTS Tokens (
                 TokenId TEXT NOT NULL PRIMARY KEY,
                 JwtId TEXT NOT NULL,

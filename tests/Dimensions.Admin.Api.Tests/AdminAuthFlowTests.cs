@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Dimensions.Admin.Api.Tests.TestHost;
 using Dimensions.Contracts.Auth;
 using Dimensions.Contracts.Common;
+using Dimensions.Contracts.Device;
 using Microsoft.Data.Sqlite;
 
 namespace Dimensions.Admin.Api.Tests;
@@ -58,6 +59,46 @@ public sealed class AdminAuthFlowTests : IDisposable
 
         var count = Convert.ToInt32(await command.ExecuteScalarAsync());
         Assert.True(count >= 2);
+    }
+
+    [Fact]
+    public async Task DisableDevice_WithUnknownDevice_WritesApiExceptionLog()
+    {
+        await using var factory = new DimensionsAdminApiFactory(_database.ConnectionString);
+        using var client = factory.CreateClient();
+
+        var loginResponse = await client.PostAsJsonAsync("/admin-api/auth/login", new LoginRequest
+        {
+            LoginAccount = "admin",
+            Password = "admin"
+        });
+
+        loginResponse.EnsureSuccessStatusCode();
+        var loginPayload = await loginResponse.Content.ReadFromJsonAsync<ApiResponse<LoginResponse>>();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginPayload!.Data!.AccessToken);
+
+        var disableResponse = await client.PostAsJsonAsync("/admin-api/device/disable", new DisableDeviceRequest
+        {
+            DeviceId = "DEVICE-NOT-FOUND",
+            Reason = "integration test"
+        });
+
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, disableResponse.StatusCode);
+
+        await using var connection = new SqliteConnection(_database.ConnectionString);
+        await connection.OpenAsync();
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT COUNT(1)
+            FROM ApiExceptionLogs
+            WHERE RequestPath = '/admin-api/device/disable'
+              AND ErrorCode = 'Device.NotFound'
+              AND UserId = 'ADMIN001';
+            """;
+
+        var count = Convert.ToInt32(await command.ExecuteScalarAsync());
+        Assert.True(count >= 1);
     }
 
     public void Dispose() => _database.Dispose();

@@ -89,5 +89,68 @@ public sealed class CustomerFlowTests : IDisposable
         Assert.True(count >= 1);
     }
 
+    [Fact]
+    public async Task CustomerQuery_WithUnknownCustomer_WritesApiExceptionLog()
+    {
+        await using var adminFactory = new AdminApiFactory(_database.ConnectionString);
+        await using var businessFactory = new DimensionsApiFactory(_database.ConnectionString);
+
+        using var adminClient = adminFactory.CreateClient();
+        using var businessClient = businessFactory.CreateClient();
+
+        var loginResponse = await adminClient.PostAsJsonAsync("/admin-api/auth/login", new LoginRequest
+        {
+            LoginAccount = "admin",
+            Password = "admin"
+        });
+
+        loginResponse.EnsureSuccessStatusCode();
+        var loginPayload = await loginResponse.Content.ReadFromJsonAsync<ApiResponse<LoginResponse>>();
+        adminClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginPayload!.Data!.AccessToken);
+
+        var createTokenResponse = await adminClient.PostAsJsonAsync("/admin-api/token/create", new CreateTokenRequest
+        {
+            TokenType = "UserAccess",
+            UserId = "USER901",
+            UserName = "Exception Test User",
+            TokenName = "Customer Exception Test Token",
+            IsSingleDevice = false,
+            EffectiveAt = DateTimeOffset.UtcNow.AddMinutes(-1),
+            ExpireAt = DateTimeOffset.UtcNow.AddDays(7),
+            IsPermanent = false,
+            CanReissue = true,
+            CanRenew = true,
+            Purpose = "IntegrationTest",
+            Remark = "exception log integration test"
+        });
+
+        createTokenResponse.EnsureSuccessStatusCode();
+        var createTokenPayload = await createTokenResponse.Content.ReadFromJsonAsync<ApiResponse<CreateTokenResponse>>();
+        businessClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", createTokenPayload!.Data!.AccessToken);
+
+        var queryResponse = await businessClient.PostAsJsonAsync("/api/customer/query", new CustomerQueryRequest
+        {
+            CustomerId = "CUST-NOT-FOUND",
+            Keyword = "Missing"
+        });
+
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, queryResponse.StatusCode);
+
+        await using var connection = new SqliteConnection(_database.ConnectionString);
+        await connection.OpenAsync();
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT COUNT(1)
+            FROM ApiExceptionLogs
+            WHERE RequestPath = '/api/customer/query'
+              AND ErrorCode = 'Customer.NotFound'
+              AND UserId = 'USER901';
+            """;
+
+        var count = Convert.ToInt32(await command.ExecuteScalarAsync());
+        Assert.True(count >= 1);
+    }
+
     public void Dispose() => _database.Dispose();
 }
