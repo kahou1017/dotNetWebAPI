@@ -4,9 +4,11 @@ using Dimensions.Contracts.Token;
 
 namespace Dimensions.Application.Services;
 
-public sealed class ApiLogService(
+// 目前只負責把已驗證成功的 token 請求寫入 usage log。
+// 後續若要補 API request/exception/payload DB logging，應另外拆出專用 service。
+public sealed class TokenUsageLogService(
     ICurrentUserAccessor currentUserAccessor,
-    ITokenRepository tokenRepository) : IApiLogService
+    ITokenRepository tokenRepository) : ITokenUsageLogService
 {
     public async Task LogRequestAsync(ApiRequestLogEntry entry, CancellationToken cancellationToken = default)
     {

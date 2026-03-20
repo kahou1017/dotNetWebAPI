@@ -93,9 +93,17 @@
 
 ### 4. Logging 完整化
 
-- [ ] 補 `ActionLog / UsageLog / ExceptionLog / PayloadLog`
-- [ ] 寫入 DB
-- [ ] 補 sensitive data masking 規則
+- [x] 本機 `log4net` 檔案 logging
+  Completed: 2026-03-20 21:12
+- [x] token `ActionLog`
+  Completed: 2026-03-21 00:18
+- [x] token `UsageLog`
+  Completed: 2026-03-21 00:18
+- [ ] API request log 寫入 DB
+- [ ] API exception log 寫入 DB
+- [ ] request / response payload log 寫入 DB
+- [ ] sensitive data masking 規則
+- [ ] 管理端 log 查詢 API
 
 ## Priority 3
 

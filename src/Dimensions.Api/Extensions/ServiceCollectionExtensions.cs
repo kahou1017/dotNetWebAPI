@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IDeviceService, DeviceService>();
-        services.AddScoped<IApiLogService, ApiLogService>();
+        services.AddScoped<ITokenUsageLogService, TokenUsageLogService>();
 
         return services;
     }

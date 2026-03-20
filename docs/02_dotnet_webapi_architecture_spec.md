@@ -85,7 +85,7 @@ tests/
 - `AuthService`
 - `TokenService`
 - `DeviceService`
-- `ApiLogService`
+- `TokenUsageLogService`
 
 ### 5. Dimensions.Domain
 

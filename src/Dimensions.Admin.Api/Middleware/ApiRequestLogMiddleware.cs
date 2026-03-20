@@ -7,11 +7,11 @@ namespace Dimensions.Admin.Api.Middleware;
 
 public sealed class ApiRequestLogMiddleware(RequestDelegate next, ILogger<ApiRequestLogMiddleware> logger)
 {
-    public async Task InvokeAsync(HttpContext context, IApiLogService apiLogService)
+    public async Task InvokeAsync(HttpContext context, ITokenUsageLogService tokenUsageLogService)
     {
         var caseId = ApiResponseFactory.GetCaseId(context);
         await next(context);
-        await apiLogService.LogRequestAsync(
+        await tokenUsageLogService.LogRequestAsync(
             new ApiRequestLogEntry
             {
                 CaseId = caseId,
