@@ -51,13 +51,21 @@
 - 統一 validation error 回傳格式
 
 Checklist:
-- [ ] 決定是否導入 `FluentValidation`
-- [ ] 為 `LoginRequest` 建 validator
-- [ ] 為 `CreateTokenRequest` 建 validator
-- [ ] 為 `ReissueTokenRequest` 建 validator
-- [ ] 為 `CreateDeviceRequest` 建 validator
-- [ ] 為 `CustomerQueryRequest` 建 validator
-- [ ] 將 validation failure 整合進既有 exception / response pipeline
+- [x] 決定是否導入 `FluentValidation`
+  Completed: 2026-03-20 21:12:24 +08:00
+- [x] 為 `LoginRequest` 建 validator
+  Completed: 2026-03-20 21:12:24 +08:00
+- [x] 為 `CreateTokenRequest` 建 validator
+  Completed: 2026-03-20 21:12:24 +08:00
+- [x] 為 `ReissueTokenRequest` 建 validator
+  Completed: 2026-03-20 21:12:24 +08:00
+- [x] 為 `CreateDeviceRequest` 建 validator
+  Completed: 2026-03-20 21:12:24 +08:00
+- [x] 為 `CustomerQueryRequest` 建 validator
+  Completed: 2026-03-20 21:12:24 +08:00
+- [x] 將 validation failure 整合進既有 exception / response pipeline
+  Completed: 2026-03-20 21:12:24 +08:00
+- [ ] 規劃第二批 request validators
 
 原因：
 - 現在 API 可跑，但輸入邊界仍偏鬆
@@ -187,17 +195,22 @@ Checklist:
 - [ ] `docs/v1_1/9_admin_web_development_todo_v1.md`
   Note: 屬於 Admin Web 規劃，不修改，不納入 commit
 
+- [ ] `docs/planning/01_frontend_todo_list.md`
+  Note: 屬於 frontend thread，不修改，不納入 commit
+
 ---
 
 ## Next Recommended Task
 
 如果現在重新開工，最建議直接做：
 
-- [ ] Request Validation 第一批
-  Scope:
-  `LoginRequest` / `CreateTokenRequest` / `ReissueTokenRequest` / `CreateDeviceRequest` / `CustomerQueryRequest`
+- [ ] Token / Device Rule Hardening
+
+建議先做：
+- `revoke / renew / reissue` 前置條件檢查
+- expired / revoked / disabled token 一致性處理
+- single-device token 換綁規則
 
 原因：
-- 成本低
-- 立即提升 API 品質
-- 幾乎所有後續後端功能都會受益
+- Request Validation 第一批已完成
+- 下一步最值得補的是安全規則完整性

@@ -34,19 +34,23 @@
 
 | 套件名稱 | 版本 | 用途 |
 |---|---|---|
+| `FluentValidation.DependencyInjectionExtensions` | `12.1.1` | 註冊 FluentValidation validators，供後端 request validation 使用 |
 | `Microsoft.AspNetCore.Authentication.JwtBearer` | `10.0.0` | 提供 JWT bearer 驗章與 ASP.NET Core authentication pipeline 整合 |
 | `Microsoft.Extensions.Logging.Log4Net.AspNetCore` | `8.0.0` | 將 ASP.NET Core `ILogger` 接到 `log4net` provider，寫入本機檔案 log |
+| `Swashbuckle.AspNetCore` | `9.0.6` | 提供 Swagger / OpenAPI UI 與文件產生 |
 
 ### 補充
 
-- 目前 API 已改用真實 JWT bearer 驗證
-- `AuthController` 會簽發 JWT，受保護 API 透過 bearer token 驗章
+- API 已使用真實 JWT bearer 驗證
+- API 已使用 Swagger / OpenAPI
+- 第一批 request validation 已啟用
 - `log4net.config` 負責 rolling file appender 設定
 
 ### 重要相依套件
 
 由目前套件帶入或直接依賴的重要組件包含：
 
+- `FluentValidation`
 - `System.IdentityModel.Tokens.Jwt`
 - `Microsoft.IdentityModel.Tokens`
 - `log4net`
@@ -153,17 +157,21 @@
 
 目前 solution 直接使用到的 NuGet 套件共有：
 
-1. `Microsoft.AspNetCore.Authentication.JwtBearer` `10.0.0`
-2. `Microsoft.Extensions.Logging.Log4Net.AspNetCore` `8.0.0`
-3. `Dapper` `2.1.66`
-4. `Microsoft.Data.SqlClient` `6.1.2`
-5. `Microsoft.Data.Sqlite` `9.0.0`
+1. `FluentValidation.DependencyInjectionExtensions` `12.1.1`
+2. `Microsoft.AspNetCore.Authentication.JwtBearer` `10.0.0`
+3. `Microsoft.Extensions.Logging.Log4Net.AspNetCore` `8.0.0`
+4. `Swashbuckle.AspNetCore` `9.0.6`
+5. `Dapper` `2.1.66`
+6. `Microsoft.Data.SqlClient` `6.1.2`
+7. `Microsoft.Data.Sqlite` `9.0.0`
 
 目前主要用途集中在：
 
+- request validation
 - 真實 JWT bearer 驗章
 - 本機檔案 logging
 - `log4net` provider 骨架
+- Swagger / OpenAPI
 - 可切換的資料庫 provider 骨架
 - SQL Server 連線骨架
 - SQLite 開發模式
@@ -175,8 +183,6 @@
 
 後續如果進入正式開發，可能還會補入：
 
-- `FluentValidation.AspNetCore`
-- `Swashbuckle.AspNetCore`
 - 視資料存取策略再評估是否補 `Microsoft.Extensions.Diagnostics.HealthChecks`
 
 到時再同步更新這份文件即可。

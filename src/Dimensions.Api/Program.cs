@@ -1,6 +1,8 @@
 using Dimensions.Api.Extensions;
 using Dimensions.Api.Middleware;
+using Dimensions.Api.Validation;
 using Dimensions.Infrastructure.Extensions;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +13,15 @@ builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 builder.Logging.AddLog4Net("log4net.config");
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationActionFilter>();
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDimensionsSwagger();
 builder.Services.AddDimensionsServices(builder.Configuration);
 builder.Services.AddDimensionsAuthentication(builder.Configuration);
+builder.Services.AddValidatorsFromAssemblyContaining<ValidationActionFilter>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("DefaultCors", policy =>

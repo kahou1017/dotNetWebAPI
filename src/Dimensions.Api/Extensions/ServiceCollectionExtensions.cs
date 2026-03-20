@@ -1,4 +1,5 @@
 using Dimensions.Api.Services;
+using Dimensions.Api.Validation;
 using Dimensions.Application.Interfaces;
 using Dimensions.Application.Services;
 using Dimensions.Infrastructure.Extensions;
@@ -11,6 +12,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddDimensionsInfrastructure(configuration);
         services.AddHttpContextAccessor();
+        services.AddScoped<ValidationActionFilter>();
         services.AddScoped<ICaseIdAccessor, HttpContextCaseIdAccessor>();
         services.AddScoped<ICurrentUserAccessor, HttpContextCurrentUserAccessor>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
