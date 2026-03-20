@@ -16,6 +16,8 @@ internal sealed class SqliteTestDatabase : IDisposable
 
     public string ConnectionString => $"Data Source={_databasePath};Cache=Shared;Foreign Keys=True";
 
+    public string DatabasePath => _databasePath;
+
     public void Dispose()
     {
         try

@@ -202,6 +202,8 @@ SQLite 檔案位置：
 - API 使用 `log4net`
 - 設定檔在 [log4net.config](src/Dimensions.Api/log4net.config)
 - 本機 log 會寫到 `Logs/`
+- 已完成 token `ActionLog / UsageLog`
+- 已完成 `ApiRequestLog` 寫入 SQLite
 
 ## 測試
 

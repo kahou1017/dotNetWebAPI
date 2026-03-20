@@ -4,6 +4,8 @@ public sealed record ApiRequestLogEntry
 {
     public string CaseId { get; init; } = string.Empty;
 
+    public DateTimeOffset RequestTime { get; init; } = DateTimeOffset.UtcNow;
+
     public string Path { get; init; } = string.Empty;
 
     public string Method { get; init; } = string.Empty;

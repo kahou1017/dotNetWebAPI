@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Dimensions.Admin.Api.Tests.TestHost;
 using Dimensions.Contracts.Auth;
 using Dimensions.Contracts.Common;
+using Microsoft.Data.Sqlite;
 
 namespace Dimensions.Admin.Api.Tests;
 
@@ -44,6 +45,19 @@ public sealed class AdminAuthFlowTests : IDisposable
         Assert.Equal("ADMIN001", mePayload.Data.UserId);
         Assert.Equal("admin", mePayload.Data.LoginAccount);
         Assert.Equal("System Admin", mePayload.Data.DisplayName);
+
+        await using var connection = new SqliteConnection(_database.ConnectionString);
+        await connection.OpenAsync();
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT COUNT(1)
+            FROM ApiRequestLogs
+            WHERE RequestPath IN ('/admin-api/auth/login', '/admin-api/auth/me');
+            """;
+
+        var count = Convert.ToInt32(await command.ExecuteScalarAsync());
+        Assert.True(count >= 2);
     }
 
     public void Dispose() => _database.Dispose();

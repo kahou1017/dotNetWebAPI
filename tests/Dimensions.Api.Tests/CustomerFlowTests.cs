@@ -5,6 +5,7 @@ using Dimensions.Contracts.Auth;
 using Dimensions.Contracts.Business;
 using Dimensions.Contracts.Common;
 using Dimensions.Contracts.Token;
+using Microsoft.Data.Sqlite;
 
 namespace Dimensions.Api.Tests;
 
@@ -71,6 +72,21 @@ public sealed class CustomerFlowTests : IDisposable
         Assert.Equal("API Test User", queryPayload.Data.QueriedByName);
         Assert.Equal("CUST-900", queryPayload.Data.CustomerId);
         Assert.Equal("VIP Customer", queryPayload.Data.CustomerName);
+
+        await using var connection = new SqliteConnection(_database.ConnectionString);
+        await connection.OpenAsync();
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT COUNT(1)
+            FROM ApiRequestLogs
+            WHERE RequestPath = '/api/customer/query'
+              AND UserId = 'USER900'
+              AND TokenId IS NOT NULL;
+            """;
+
+        var count = Convert.ToInt32(await command.ExecuteScalarAsync());
+        Assert.True(count >= 1);
     }
 
     public void Dispose() => _database.Dispose();

@@ -73,6 +73,21 @@
 
 - 記錄 API request 基本資訊
 
+目前已落地的欄位方向：
+
+- `CaseId`
+- `RequestTime`
+- `HttpMethod`
+- `RequestPath`
+- `StatusCode`
+- `ClientIp`
+- `DeviceId`
+- `IsAuthenticated`
+- `IsSuccess`
+- `TokenId`
+- `UserId`
+- `TokenType`
+
 ### 5. ApiRequestPayloadLog
 
 用途：

@@ -99,7 +99,8 @@
   Completed: 2026-03-21 00:18
 - [x] token `UsageLog`
   Completed: 2026-03-21 00:18
-- [ ] API request log 寫入 DB
+- [x] API request log 寫入 DB
+  Completed: 2026-03-21 02:14
 - [ ] API exception log 寫入 DB
 - [ ] request / response payload log 寫入 DB
 - [ ] sensitive data masking 規則
