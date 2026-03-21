@@ -47,3 +47,25 @@ Authorization: Bearer {{admin_token}}
   "pageNo": 1,
   "pageSize": 20
 }
+
+### API Request Log List
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/log/request/list
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "path": "/admin-api/auth/me",
+  "pageNo": 1,
+  "pageSize": 20
+}
+
+### API Exception Log List
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/log/exception/list
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "errorCode": "Device.NotFound",
+  "pageNo": 1,
+  "pageSize": 20
+}

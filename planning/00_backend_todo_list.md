@@ -105,7 +105,8 @@
   Completed: 2026-03-21 03:00
 - [ ] request / response payload log 寫入 DB
 - [ ] sensitive data masking 規則
-- [ ] 管理端 log 查詢 API
+- [x] 管理端 log 查詢 API
+  Completed: 2026-03-21 03:20
 
 ## Priority 3
 

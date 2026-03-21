@@ -140,6 +140,8 @@ SQLite 檔案位置：
 - `GET /admin-api/auth/me`
 - `POST /admin-api/token/*`
 - `POST /admin-api/device/*`
+- `POST /admin-api/log/request/list`
+- `POST /admin-api/log/exception/list`
 - `POST /api/customer/query`
 - `GET /api/public/{resource}`
 

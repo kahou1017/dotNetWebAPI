@@ -18,6 +18,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IApiExceptionLogService, ApiExceptionLogService>();
         services.AddScoped<IApiRequestLogService, ApiRequestLogService>();
+        services.AddScoped<ILogService, LogService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<ITokenService, TokenService>();
