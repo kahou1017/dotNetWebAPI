@@ -57,7 +57,7 @@
 ### 目前已建立
 
 ```text
-Dimensions.slnx
+Dimensions.sln
 src/
   Dimensions.Api
   Dimensions.Admin.Api
@@ -92,13 +92,13 @@ src/
 1. Restore
 
 ```powershell
-dotnet restore .\Dimensions.slnx
+dotnet restore .\Dimensions.sln
 ```
 
 2. Build
 
 ```powershell
-dotnet build .\Dimensions.slnx --no-restore
+dotnet build .\Dimensions.sln --no-restore
 ```
 
 3. Run API

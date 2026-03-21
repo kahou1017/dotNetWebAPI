@@ -7,7 +7,7 @@
 ## Solution 結構
 
 ```text
-Dimensions.slnx
+Dimensions.sln
 src/
   Dimensions.Api
   Dimensions.Admin.Api

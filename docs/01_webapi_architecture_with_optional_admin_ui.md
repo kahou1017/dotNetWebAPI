@@ -105,7 +105,7 @@
 ## Solution 方向
 
 ```text
-Dimensions.slnx
+Dimensions.sln
 src/
   Dimensions.Api
   Dimensions.Admin.Api
