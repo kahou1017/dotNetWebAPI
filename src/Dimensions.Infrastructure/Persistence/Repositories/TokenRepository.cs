@@ -35,6 +35,7 @@ public sealed class TokenRepository(DapperSqlExecutor sqlExecutor) : ITokenRepos
                 UserId,
                 UserName,
                 TokenName,
+                Scope,
                 Status,
                 IsSingleDevice,
                 DeviceId,
@@ -94,6 +95,7 @@ public sealed class TokenRepository(DapperSqlExecutor sqlExecutor) : ITokenRepos
                 JwtId,
                 TokenType,
                 TokenName,
+                Scope,
                 UserId,
                 UserName,
                 Status,
@@ -135,6 +137,7 @@ public sealed class TokenRepository(DapperSqlExecutor sqlExecutor) : ITokenRepos
                 JwtId,
                 TokenType,
                 TokenName,
+                Scope,
                 UserId,
                 UserName,
                 Status,
@@ -189,6 +192,7 @@ public sealed class TokenRepository(DapperSqlExecutor sqlExecutor) : ITokenRepos
                 JwtId,
                 TokenType,
                 TokenName,
+                Scope,
                 UserId,
                 UserName,
                 Status,
@@ -229,11 +233,11 @@ public sealed class TokenRepository(DapperSqlExecutor sqlExecutor) : ITokenRepos
     {
         const string sql = """
             INSERT INTO Tokens (
-                TokenId, JwtId, TokenType, UserId, UserName, TokenName, Status, IsRevoked, IsSingleDevice, IsEnabled,
+                TokenId, JwtId, TokenType, UserId, UserName, TokenName, Scope, Status, IsRevoked, IsSingleDevice, IsEnabled,
                 CanReissue, CanRenew, DeviceId, DeviceName, AccessToken, IssuedAt, EffectiveAt, ExpireAt, LastUsedAt,
                 Purpose, Remark, CreatedBy, CreatedAt, RevokedAt)
             VALUES (
-                @TokenId, @JwtId, @TokenType, @UserId, @UserName, @TokenName, @Status, @IsRevoked, @IsSingleDevice, @IsEnabled,
+                @TokenId, @JwtId, @TokenType, @UserId, @UserName, @TokenName, @Scope, @Status, @IsRevoked, @IsSingleDevice, @IsEnabled,
                 @CanReissue, @CanRenew, @DeviceId, @DeviceName, @AccessToken, @IssuedAt, @EffectiveAt, @ExpireAt, @LastUsedAt,
                 @Purpose, @Remark, @CreatedBy, @CreatedAt, @RevokedAt);
             """;
@@ -318,6 +322,7 @@ public sealed class TokenRepository(DapperSqlExecutor sqlExecutor) : ITokenRepos
                 JwtId,
                 TokenType,
                 TokenName,
+                Scope,
                 UserId,
                 UserName,
                 Status,

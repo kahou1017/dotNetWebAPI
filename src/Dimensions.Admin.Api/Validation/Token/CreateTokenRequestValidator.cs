@@ -32,6 +32,10 @@ public sealed class CreateTokenRequestValidator : AbstractValidator<CreateTokenR
             .NotEmpty()
             .MaximumLength(100);
 
+        RuleFor(x => x.Scope)
+            .MaximumLength(200)
+            .When(x => !string.IsNullOrWhiteSpace(x.Scope));
+
         RuleFor(x => x.EffectiveAt)
             .NotEmpty();
 

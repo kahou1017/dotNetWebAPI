@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dimensions.Api.Controllers;
 
 [ApiController]
-[Authorize(Policy = PolicyNames.AuthenticatedUser)]
+[Authorize(Policy = PolicyNames.CustomerQuery)]
 [Route("api/customer")]
 public sealed class CustomerController(
     IConfiguration configuration,

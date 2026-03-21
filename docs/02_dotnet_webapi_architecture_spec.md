@@ -164,6 +164,7 @@ tests/
 ### 業務 API
 
 - `AuthenticatedUser`
+- `CustomerQuery`
 - 未來可擴充 `Scope:{scope}` 或 `ModuleAccess:{module}`
 
 ## Token 類型使用規則

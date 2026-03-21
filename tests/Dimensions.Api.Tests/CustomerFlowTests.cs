@@ -152,5 +152,56 @@ public sealed class CustomerFlowTests : IDisposable
         Assert.True(count >= 1);
     }
 
+    [Fact]
+    public async Task CustomerQuery_WithoutCustomerQueryScope_ReturnsForbidden()
+    {
+        await using var adminFactory = new AdminApiFactory(_database.ConnectionString);
+        await using var businessFactory = new DimensionsApiFactory(_database.ConnectionString);
+
+        using var adminClient = adminFactory.CreateClient();
+        using var businessClient = businessFactory.CreateClient();
+
+        var loginResponse = await adminClient.PostAsJsonAsync("/admin-api/auth/login", new LoginRequest
+        {
+            LoginAccount = "admin",
+            Password = "admin"
+        });
+
+        loginResponse.EnsureSuccessStatusCode();
+        var loginPayload = await loginResponse.Content.ReadFromJsonAsync<ApiResponse<LoginResponse>>();
+        adminClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginPayload!.Data!.AccessToken);
+
+        var createTokenResponse = await adminClient.PostAsJsonAsync("/admin-api/token/create", new CreateTokenRequest
+        {
+            TokenType = "UserAccess",
+            UserId = "USER902",
+            UserName = "Scope Test User",
+            TokenName = "Scope Restricted Token",
+            Scope = "account.update",
+            IsSingleDevice = false,
+            EffectiveAt = DateTimeOffset.UtcNow.AddMinutes(-1),
+            ExpireAt = DateTimeOffset.UtcNow.AddDays(7),
+            IsPermanent = false,
+            CanReissue = true,
+            CanRenew = true,
+            Purpose = "IntegrationTest",
+            Remark = "scope forbidden integration test"
+        });
+
+        createTokenResponse.EnsureSuccessStatusCode();
+        var createTokenPayload = await createTokenResponse.Content.ReadFromJsonAsync<ApiResponse<CreateTokenResponse>>();
+        Assert.Equal("account.update", createTokenPayload!.Data!.Scope);
+
+        businessClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", createTokenPayload.Data.AccessToken);
+
+        var queryResponse = await businessClient.PostAsJsonAsync("/api/customer/query", new CustomerQueryRequest
+        {
+            CustomerId = "CUST-900",
+            Keyword = "VIP"
+        });
+
+        Assert.Equal(System.Net.HttpStatusCode.Forbidden, queryResponse.StatusCode);
+    }
+
     public void Dispose() => _database.Dispose();
 }

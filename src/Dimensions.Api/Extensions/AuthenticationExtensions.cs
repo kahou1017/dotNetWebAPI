@@ -4,6 +4,7 @@ using Dimensions.Api.Policies;
 using Dimensions.Application.Interfaces;
 using Dimensions.Domain.Constants;
 using Dimensions.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -178,8 +179,29 @@ public static class AuthenticationExtensions
                             || claim.Value == TokenType.Integration
                             || claim.Value == TokenType.Service)));
             });
+
+            options.AddPolicy(PolicyNames.CustomerQuery, policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.RequireAssertion(context =>
+                    HasBusinessToken(context)
+                    && HasScope(context, "customer.query"));
+            });
         });
 
         return services;
     }
+
+    private static bool HasBusinessToken(AuthorizationHandlerContext context)
+        => context.User.Claims.Any(claim =>
+            claim.Type == ClaimNames.TokenType
+            && (claim.Value == TokenType.UserAccess
+                || claim.Value == TokenType.Integration
+                || claim.Value == TokenType.Service));
+
+    private static bool HasScope(AuthorizationHandlerContext context, string requiredScope)
+        => context.User.Claims.Any(claim =>
+            claim.Type == ClaimNames.Scope
+            && claim.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Contains(requiredScope, StringComparer.OrdinalIgnoreCase));
 }

@@ -9,6 +9,7 @@ public sealed record TokenListItemResponse
     public string UserId { get; init; } = string.Empty;
     public string UserName { get; init; } = string.Empty;
     public string TokenName { get; init; } = string.Empty;
+    public string? Scope { get; init; }
     public string Status { get; init; } = string.Empty;
     public bool IsSingleDevice { get; init; }
     public string? DeviceId { get; init; }
@@ -25,6 +26,7 @@ public sealed record TokenDetailResponse
     public string JwtId { get; init; } = string.Empty;
     public string TokenType { get; init; } = string.Empty;
     public string TokenName { get; init; } = string.Empty;
+    public string? Scope { get; init; }
     public string UserId { get; init; } = string.Empty;
     public string UserName { get; init; } = string.Empty;
     public string Status { get; init; } = string.Empty;
@@ -50,6 +52,7 @@ public sealed record CreateTokenResponse
     public string TokenId { get; init; } = string.Empty;
     public string JwtId { get; init; } = string.Empty;
     public string TokenType { get; init; } = string.Empty;
+    public string Scope { get; init; } = string.Empty;
     public string AccessToken { get; init; } = string.Empty;
     public DateTimeOffset IssuedAt { get; init; }
     public DateTimeOffset EffectiveAt { get; init; }
@@ -69,6 +72,7 @@ public sealed record ReissueTokenResponse
     public string OldTokenId { get; init; } = string.Empty;
     public string NewTokenId { get; init; } = string.Empty;
     public string NewJwtId { get; init; } = string.Empty;
+    public string Scope { get; init; } = string.Empty;
     public string AccessToken { get; init; } = string.Empty;
     public string OldStatus { get; init; } = string.Empty;
     public string NewStatus { get; init; } = string.Empty;
@@ -78,6 +82,7 @@ public sealed record RenewTokenResponse
 {
     public string TokenId { get; init; } = string.Empty;
     public string JwtId { get; init; } = string.Empty;
+    public string Scope { get; init; } = string.Empty;
     public string AccessToken { get; init; } = string.Empty;
     public DateTimeOffset? OldExpireAt { get; init; }
     public DateTimeOffset? NewExpireAt { get; init; }

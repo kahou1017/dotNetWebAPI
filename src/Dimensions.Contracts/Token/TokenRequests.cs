@@ -27,6 +27,7 @@ public sealed record CreateTokenRequest
     public string UserId { get; init; } = string.Empty;
     public string UserName { get; init; } = string.Empty;
     public string TokenName { get; init; } = string.Empty;
+    public string? Scope { get; init; }
     public bool IsSingleDevice { get; init; }
     public string? DeviceId { get; init; }
     public string? DeviceName { get; init; }

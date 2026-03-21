@@ -41,7 +41,7 @@ public sealed class TokenService(
         var jwtId = Guid.NewGuid().ToString("N");
         var expiresAt = request.IsPermanent ? null : request.ExpireAt;
         var role = request.TokenType == TokenType.Integration ? "Integration" : "User";
-        var scope = request.TokenType == TokenType.Integration ? "customer.query account.update" : "customer.query order.create";
+        var scope = ResolveScope(request.TokenType, request.Scope);
         var token = jwtTokenGenerator.GenerateToken(new JwtTokenRequest
         {
             UserId = request.UserId,
@@ -65,6 +65,7 @@ public sealed class TokenService(
                 UserId = request.UserId,
                 UserName = request.UserName,
                 TokenName = request.TokenName,
+                Scope = scope,
                 Status = TokenStatus.Active,
                 IsRevoked = false,
                 IsSingleDevice = request.IsSingleDevice,
@@ -100,6 +101,7 @@ public sealed class TokenService(
             TokenId = tokenId,
             JwtId = jwtId,
             TokenType = request.TokenType,
+            Scope = scope,
             AccessToken = token.AccessToken,
             IssuedAt = token.IssuedAt,
             EffectiveAt = token.EffectiveAt,
@@ -163,7 +165,9 @@ public sealed class TokenService(
         var newJwtId = Guid.NewGuid().ToString("N");
         var tokenType = oldDetail.TokenType;
         var role = tokenType == TokenType.Integration ? "Integration" : "User";
-        var scope = tokenType == TokenType.Integration ? "customer.query account.update" : "customer.query order.create";
+        var scope = string.IsNullOrWhiteSpace(oldDetail.Scope)
+            ? GetDefaultScope(tokenType)
+            : oldDetail.Scope;
         var token = jwtTokenGenerator.GenerateToken(new JwtTokenRequest
         {
             UserId = oldDetail.UserId,
@@ -188,6 +192,7 @@ public sealed class TokenService(
                 UserId = oldDetail.UserId,
                 UserName = oldDetail.UserName,
                 TokenName = oldDetail.TokenName,
+                Scope = scope,
                 Status = TokenStatus.Active,
                 IsRevoked = false,
                 IsSingleDevice = oldDetail.IsSingleDevice,
@@ -223,6 +228,7 @@ public sealed class TokenService(
             OldTokenId = request.TokenId,
             NewTokenId = newTokenId,
             NewJwtId = newJwtId,
+            Scope = scope,
             AccessToken = token.AccessToken,
             OldStatus = TokenStatus.Reissued,
             NewStatus = TokenStatus.Active
@@ -250,7 +256,9 @@ public sealed class TokenService(
 
         var newJwtId = Guid.NewGuid().ToString("N");
         var role = detail.TokenType == TokenType.Integration ? "Integration" : "User";
-        var scope = detail.TokenType == TokenType.Integration ? "customer.query account.update" : "customer.query order.create";
+        var scope = string.IsNullOrWhiteSpace(detail.Scope)
+            ? GetDefaultScope(detail.TokenType)
+            : detail.Scope;
         var token = jwtTokenGenerator.GenerateToken(new JwtTokenRequest
         {
             UserId = detail.UserId,
@@ -287,6 +295,7 @@ public sealed class TokenService(
         {
             TokenId = request.TokenId,
             JwtId = newJwtId,
+            Scope = scope,
             AccessToken = token.AccessToken,
             OldExpireAt = detail.ExpireAt,
             NewExpireAt = token.ExpiresAt,
@@ -415,4 +424,19 @@ public sealed class TokenService(
 
     private static DimensionsApplicationException CreateException(int statusCode, string errorCode, string errorMessage)
         => new(statusCode, errorCode, errorMessage);
+
+    private static string ResolveScope(string tokenType, string? requestedScope)
+    {
+        if (!string.IsNullOrWhiteSpace(requestedScope))
+        {
+            return requestedScope.Trim();
+        }
+
+        return GetDefaultScope(tokenType);
+    }
+
+    private static string GetDefaultScope(string tokenType)
+        => tokenType == TokenType.Integration
+            ? "customer.query account.update"
+            : "customer.query order.create";
 }

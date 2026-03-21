@@ -88,7 +88,7 @@ X-Device-Id: {device-id}
 
 ### 業務 API
 
-- `AuthenticatedUser`
+- `CustomerQuery`
 - 未來可擴充 scope/module policy
 
 接受的 token 類型：

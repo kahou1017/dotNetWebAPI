@@ -14,6 +14,8 @@ public sealed record TokenWriteModel
 
     public string TokenName { get; init; } = string.Empty;
 
+    public string Scope { get; init; } = string.Empty;
+
     public string Status { get; init; } = string.Empty;
 
     public bool IsRevoked { get; init; }

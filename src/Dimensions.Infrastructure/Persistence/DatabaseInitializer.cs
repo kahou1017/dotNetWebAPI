@@ -107,6 +107,7 @@ public sealed class DatabaseInitializer(
                 UserId TEXT NOT NULL,
                 UserName TEXT NOT NULL,
                 TokenName TEXT NOT NULL,
+                Scope TEXT NULL,
                 Status TEXT NOT NULL,
                 IsRevoked INTEGER NOT NULL,
                 IsSingleDevice INTEGER NOT NULL,
@@ -166,6 +167,17 @@ public sealed class DatabaseInitializer(
 
         await connection.ExecuteAsync(new CommandDefinition(schemaSql, cancellationToken: cancellationToken));
 
+        var hasTokenScopeColumn = await connection.ExecuteScalarAsync<long>(new CommandDefinition(
+            "SELECT COUNT(1) FROM pragma_table_info('Tokens') WHERE name = 'Scope';",
+            cancellationToken: cancellationToken));
+
+        if (hasTokenScopeColumn == 0)
+        {
+            await connection.ExecuteAsync(new CommandDefinition(
+                "ALTER TABLE Tokens ADD COLUMN Scope TEXT NULL;",
+                cancellationToken: cancellationToken));
+        }
+
         const string seedSql = """
             INSERT OR IGNORE INTO AdminUsers (UserId, LoginAccount, Password, DisplayName, Role, Scope, LastLoginAt, CreatedAt)
             VALUES
@@ -183,13 +195,13 @@ public sealed class DatabaseInitializer(
                 ('CUST-999', 'Suspended Customer', 'Suspended', @SeedNow);
 
             INSERT OR IGNORE INTO Tokens (
-                TokenId, JwtId, TokenType, UserId, UserName, TokenName, Status, IsRevoked, IsSingleDevice, IsEnabled,
+                TokenId, JwtId, TokenType, UserId, UserName, TokenName, Scope, Status, IsRevoked, IsSingleDevice, IsEnabled,
                 CanReissue, CanRenew, DeviceId, DeviceName, AccessToken, IssuedAt, EffectiveAt, ExpireAt, LastUsedAt,
                 Purpose, Remark, CreatedBy, CreatedAt, RevokedAt)
             VALUES
-                ('ADM2026000001', 'JTI-ADM-0001', @AdminSessionType, 'ADMIN001', 'System Admin', 'Admin Session', @ActiveStatus, 0, 0, 1, 0, 0, NULL, NULL, 'seed-admin-session', @SeedNow, @SeedNow, NULL, @SeedNow, 'AdminLogin', 'seed admin token', 'SYSTEM', @SeedNow, NULL),
-                ('TK2026000001', 'JTI-TK-0001', @UserAccessType, 'USER001', 'Kevin', 'Main Token', @ActiveStatus, 0, 1, 1, 1, 1, 'DEVICE-001', 'Kevin Laptop', 'seed-user-token', @SeedNow, @SeedNow, @UserExpireAt, @SeedNow, 'UserAccess', 'seed user token', 'ADMIN001', @SeedNow, NULL),
-                ('TK2026000004', 'JTI-TK-0004', @IntegrationType, 'SYSTEM001', 'Integration Client', 'Integration Token', @ActiveStatus, 0, 0, 1, 1, 1, NULL, NULL, 'seed-integration-token', @SeedNow, @SeedNow, @IntegrationExpireAt, @SeedNow, 'Integration', 'seed integration token', 'ADMIN001', @SeedNow, NULL);
+                ('ADM2026000001', 'JTI-ADM-0001', @AdminSessionType, 'ADMIN001', 'System Admin', 'Admin Session', 'token.manage', @ActiveStatus, 0, 0, 1, 0, 0, NULL, NULL, 'seed-admin-session', @SeedNow, @SeedNow, NULL, @SeedNow, 'AdminLogin', 'seed admin token', 'SYSTEM', @SeedNow, NULL),
+                ('TK2026000001', 'JTI-TK-0001', @UserAccessType, 'USER001', 'Kevin', 'Main Token', 'customer.query order.create', @ActiveStatus, 0, 1, 1, 1, 1, 'DEVICE-001', 'Kevin Laptop', 'seed-user-token', @SeedNow, @SeedNow, @UserExpireAt, @SeedNow, 'UserAccess', 'seed user token', 'ADMIN001', @SeedNow, NULL),
+                ('TK2026000004', 'JTI-TK-0004', @IntegrationType, 'SYSTEM001', 'Integration Client', 'Integration Token', 'customer.query account.update', @ActiveStatus, 0, 0, 1, 1, 1, NULL, NULL, 'seed-integration-token', @SeedNow, @SeedNow, @IntegrationExpireAt, @SeedNow, 'Integration', 'seed integration token', 'ADMIN001', @SeedNow, NULL);
 
             INSERT OR IGNORE INTO TokenUsageLogs (CaseId, TokenId, UserId, RequestTime, HttpMethod, RequestPath, ClientIp, DeviceId, IsSuccess, FailureReason)
             VALUES
