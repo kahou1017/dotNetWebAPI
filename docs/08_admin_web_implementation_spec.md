@@ -25,6 +25,22 @@ Dimensions.Admin.Web
   -> Dimensions.Admin.Api (透過 HTTP 呼叫)
 ```
 
+```mermaid
+flowchart LR
+    Browser[Browser]
+    AdminWeb[Dimensions.Admin.Web MVC]
+    Session[(AdminSession)]
+    AdminApi[Dimensions.Admin.Api]
+    App[Application]
+    Infra[Infrastructure]
+    Db[(SQLite / SQL Server)]
+
+    Browser --> AdminWeb
+    AdminWeb --> Session
+    AdminWeb -->|HTTP + Bearer Token| AdminApi
+    AdminApi --> App --> Infra --> Db
+```
+
 設計原則：
 - `Admin.Web` 不直接連資料庫
 - `Admin.Web` 不直接呼叫 `Dimensions.Api`
@@ -39,6 +55,20 @@ Dimensions.Admin.Web
 - 串接 `POST /admin-api/auth/login`
 - 建立 `AdminSession`
 - 登出後清除 Session
+
+```mermaid
+sequenceDiagram
+    participant U as Admin User
+    participant W as Dimensions.Admin.Web
+    participant A as Dimensions.Admin.Api
+
+    U->>W: 開啟 /Account/Login
+    U->>W: 輸入帳號密碼送出
+    W->>A: POST /admin-api/auth/login
+    A-->>W: accessToken / user info
+    W->>W: 寫入 AdminSession
+    W-->>U: Redirect 到 Dashboard
+```
 
 ### 2. Dashboard 首頁
 

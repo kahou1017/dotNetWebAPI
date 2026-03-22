@@ -44,13 +44,13 @@
 - `Dimensions.Contracts`
 - `Dimensions.Domain`
 - `Dimensions.Infrastructure`
+- `Dimensions.Admin.Web`
 - `Dimensions.Api.Tests`
 - `Dimensions.Admin.Api.Tests`
 - `Dimensions.Application.Tests`
 
 ### 已定案、待建立的專案
-
-- `Dimensions.Admin.Web`
+- 目前無
 
 ## Solution 結構
 
@@ -65,6 +65,7 @@ src/
   Dimensions.Contracts
   Dimensions.Domain
   Dimensions.Infrastructure
+  Dimensions.Admin.Web
 tests/
   Dimensions.Api.Tests
   Dimensions.Admin.Api.Tests
@@ -72,11 +73,7 @@ tests/
 ```
 
 ### 已定案、待建立
-
-```text
-src/
-  Dimensions.Admin.Web
-```
+- 目前無
 
 ## 技術棧
 
@@ -154,10 +151,7 @@ SQLite 檔案位置：
   - 管理查詢 API
 
 ### 已定案、待切分的 API 入口
-
-- `Dimensions.Admin.Web`
-  - 管理前端
-  - 呼叫 `Dimensions.Admin.Api`
+- 目前無
 
 ## Request Validation
 
@@ -281,3 +275,5 @@ VS Code 工作區推薦設定在 [extensions.json](.vscode/extensions.json)。
 - 每次寫 code，如果有影響使用方式、設定、流程或文件內容，會一起檢查 `README.md`
 - 正式規格文件以 `docs/` 為主
 - 工作追蹤與待辦以 `planning/` 為主
+- 所有文字檔請統一使用 `UTF-8`
+- 若文件流程較複雜，可加入 `Mermaid` 圖輔助說明

@@ -20,6 +20,21 @@
 - `docs` 是「這個系統怎麼設計」
 - `planning` 是「接下來先做什麼」
 
+## 文件格式規範
+
+為了避免文件、畫面文案或 API 使用過程出現亂碼，請統一遵守：
+
+- 所有 `Markdown`、`cshtml`、`json`、`cs`、`ps1` 等文字檔都使用 `UTF-8`
+- 若編輯器可選，建議使用 `UTF-8` 或 `UTF-8 with BOM`
+- 不要混用 Big5、ANSI 或其他本機編碼
+- 若文件流程較複雜，可加入 `Mermaid` 流程圖輔助說明
+
+簡單原則：
+
+- 文字以台灣繁體中文為主
+- 圖示用 `Mermaid`
+- 需要快速理解的地方，優先用「短段落 + 圖」說明
+
 ## 建議先看哪幾份
 
 如果你是第一次接觸這個專案，建議先讀這 3 份：
@@ -82,6 +97,22 @@
 - [planning/README.md](../planning/README.md)
 
 ## 目前已定案的核心方向
+
+```mermaid
+flowchart LR
+    AdminWeb[Dimensions.Admin.Web]
+    AdminApi[Dimensions.Admin.Api]
+    BizApi[Dimensions.Api]
+    App[Dimensions.Application]
+    Infra[Dimensions.Infrastructure]
+    Db[(SQLite / SQL Server)]
+
+    AdminWeb --> AdminApi
+    AdminApi --> App
+    BizApi --> App
+    App --> Infra
+    Infra --> Db
+```
 
 ### API 邊界
 

@@ -22,6 +22,24 @@ tests/
   Dimensions.Application.Tests
 ```
 
+## 整體呼叫關係
+
+```mermaid
+flowchart LR
+    AdminWeb[Dimensions.Admin.Web]
+    AdminApi[Dimensions.Admin.Api]
+    BizApi[Dimensions.Api]
+    App[Dimensions.Application Services]
+    Infra[Dimensions.Infrastructure Repositories]
+    Db[(SQLite / SQL Server)]
+
+    AdminWeb -->|HTTP| AdminApi
+    AdminApi --> App
+    BizApi --> App
+    App --> Infra
+    Infra --> Db
+```
+
 ## 各 project 職責
 
 ### 1. Dimensions.Api
@@ -138,6 +156,20 @@ tests/
 4. Authorization
 5. Request logging
 6. Controllers
+
+```mermaid
+flowchart TD
+    Request[HTTP Request]
+    CaseId[CaseIdMiddleware]
+    Exception[ExceptionHandlingMiddleware]
+    Auth[Authentication]
+    Authorize[Authorization]
+    RequestLog[ApiRequestLogMiddleware]
+    Controller[Controller]
+    Response[ApiResponse / Error Response]
+
+    Request --> CaseId --> Exception --> Auth --> Authorize --> RequestLog --> Controller --> Response
+```
 
 ### 回應格式責任
 
