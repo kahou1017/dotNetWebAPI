@@ -33,6 +33,7 @@
 - 專案為什麼要這樣切
 - 每個 project 的責任是什麼
 - 目錄上的檔案應該放在哪裡
+- 實際開發時要先改哪裡、怎麼跑起來
 
 ## 建議閱讀順序
 
@@ -47,6 +48,7 @@
 7. [07_dimensions_nuget_packages.md](07_dimensions_nuget_packages.md)
 8. [08_admin_web_implementation_spec.md](08_admin_web_implementation_spec.md)
 9. [09_project_structure_guide.md](09_project_structure_guide.md)
+10. [10_api_development_guide.md](10_api_development_guide.md)
 
 ## 為什麼這樣排
 
@@ -119,6 +121,10 @@
 如果你看完前面幾份文件，還是不確定檔案該放哪裡，請接著看：
 
 - [09_project_structure_guide.md](09_project_structure_guide.md)
+
+如果你已經準備開始改 code，請再接著看：
+
+- [10_api_development_guide.md](10_api_development_guide.md)
 
 這樣看後面的文件會快很多。
 

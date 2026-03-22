@@ -16,6 +16,7 @@
 1. [00_master_index.md](../docs/00_master_index.md)
 2. [02_dotnet_webapi_architecture_spec.md](../docs/02_dotnet_webapi_architecture_spec.md)
 3. [09_project_structure_guide.md](../docs/09_project_structure_guide.md)
+4. [10_api_development_guide.md](../docs/10_api_development_guide.md)
 
 確認方向後，再進來看待辦：
 

@@ -243,11 +243,30 @@ VS Code 工作區推薦設定在 [extensions.json](.vscode/extensions.json)。
 
 - [09_project_structure_guide.md](docs/09_project_structure_guide.md)
 
+如果你想直接開始改 API，建議接著看：
+
+- [10_api_development_guide.md](docs/10_api_development_guide.md)
+
 開發待辦請看：
 
 - [README.md](planning/README.md)
 - [00_backend_todo_list.md](planning/00_backend_todo_list.md)
 - [01_frontend_todo_list.md](planning/01_frontend_todo_list.md)
+
+## 推薦開發方式
+
+目前最方便的本機 API 開發方式是：
+
+1. 啟動對應 API
+   - 業務 API：`.\scripts\run-business-api.ps1`
+   - 管理 API：`.\scripts\run-admin-api.ps1`
+2. 用 `.http` 檔直接測
+   - [Dimensions.Api.http](src/Dimensions.Api/Dimensions.Api.http)
+   - [Dimensions.Admin.Api.http](src/Dimensions.Admin.Api/Dimensions.Admin.Api.http)
+3. 改完後固定跑
+   - `.\scripts\build-and-test.ps1`
+
+這樣會比手動重打多段 `dotnet` 指令更穩，也比較符合目前專案的驗證順序。
 
 ## 舊版文件說明
 

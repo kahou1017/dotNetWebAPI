@@ -118,7 +118,12 @@
 - [ ] 補 `.http` 測試案例
 - [ ] 規劃 Postman collection
 - [ ] 規劃 Bruno collection
-- [ ] 更新 README
+- [x] 更新 README
+  Completed: 2026-03-22 09:20
+- [x] 補 API 開發實作指南
+  Completed: 2026-03-22 09:20
+- [x] 補本機開發腳本
+  Completed: 2026-03-22 09:20
 
 ### 6. 測試策略
 

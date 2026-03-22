@@ -431,3 +431,7 @@
 5. 最後再動手修改程式碼
 
 這樣比較不容易一開始就把檔案放錯位置。
+
+如果你已經知道要改哪裡，下一份建議接著看：
+
+- [10_api_development_guide.md](10_api_development_guide.md)
