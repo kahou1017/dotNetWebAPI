@@ -96,8 +96,10 @@
 
 - [ ] `SearchPanel`
 - [ ] `DataTable`
-- [ ] `ErrorAlert`
-- [ ] `EmptyState`
+- [x] `ErrorAlert`
+  - `Completed: 2026-03-22 13:05`
+- [x] `EmptyState`
+  - `Completed: 2026-03-22 13:05`
 - [ ] `LoadingOverlay`
 - [ ] `ConfirmDialog`
 
@@ -109,7 +111,8 @@
   - `Completed: 2026-03-22 09:00`
 - [x] `ApiResponse<T>` 解析
   - `Completed: 2026-03-22 09:00`
-- [ ] `401 / 403` 統一處理
+- [x] `401 / 403` 統一處理
+  - `Completed: 2026-03-22 13:05`
 - [x] `caseId` 顯示
   - `Completed: 2026-03-22 09:20`
 

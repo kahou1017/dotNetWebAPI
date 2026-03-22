@@ -7,12 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dimensions.Admin.Web.Controllers;
 
 [RequireAdminSession]
-public sealed class DevicesController(IAdminApiClient adminApiClient) : Controller
+public sealed class DevicesController(IAdminApiClient adminApiClient, IAdminSessionAccessor adminSessionAccessor) : AdminWebControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> Index([FromQuery] DeviceListRequest filter, CancellationToken cancellationToken)
     {
         var result = await adminApiClient.GetDevicesAsync(filter, cancellationToken);
+        var authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, result);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
+
         ViewData["Title"] = "Device 清單";
         ViewData["ActiveNav"] = "Devices";
 
@@ -59,6 +65,12 @@ public sealed class DevicesController(IAdminApiClient adminApiClient) : Controll
             },
             cancellationToken);
 
+        var authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, result);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
+
         if (!result.IsSuccess)
         {
             model.ErrorCode = result.ErrorCode;
@@ -82,6 +94,12 @@ public sealed class DevicesController(IAdminApiClient adminApiClient) : Controll
                 Reason = form.Reason
             },
             cancellationToken);
+
+        var authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, result);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
 
         TempData["ResultMessage"] = result.IsSuccess
             ? $"Device {form.DeviceId} 已停用。"

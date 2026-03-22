@@ -1,0 +1,17 @@
+@model ErrorAlertModel
+
+@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        <div class="fw-semibold">@Model.Title</div>
+        <div>@Model.ErrorMessage</div>
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
+        {
+            <div class="small mt-2">ErrorCode: @Model.ErrorCode</div>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.CaseId))
+        {
+            <div class="case-chip">caseId: @Model.CaseId</div>
+        }
+    </div>
+}

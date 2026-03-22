@@ -75,6 +75,16 @@ Dimensions.Admin.Web
 - `/Logs/Requests`
 - `/Logs/Exceptions`
 
+### 6. 共用畫面元件
+
+已完成：
+
+- `ErrorAlert`
+- `EmptyState`
+- `PageIntro`
+
+這些 partial 已套用在 Token、Device、Log 頁面，讓錯誤與空資料狀態維持一致。
+
 ## Session 規則
 
 - `AdminSession` 只存在 `Dimensions.Admin.Web`
@@ -89,6 +99,8 @@ Dimensions.Admin.Web
 - 每頁都有一致的標題與錯誤區塊
 - 支援空資料狀態
 - 支援 `caseId` 顯示，方便對照 API log
+- `401` 會清除 Session 並導回登入頁
+- `403` 會導向統一的 `Forbidden` 頁面
 
 ## 後續建議
 

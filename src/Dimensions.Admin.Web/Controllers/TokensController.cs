@@ -7,12 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace Dimensions.Admin.Web.Controllers;
 
 [RequireAdminSession]
-public sealed class TokensController(IAdminApiClient adminApiClient) : Controller
+public sealed class TokensController(IAdminApiClient adminApiClient, IAdminSessionAccessor adminSessionAccessor) : AdminWebControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> Index([FromQuery] TokenListRequest filter, CancellationToken cancellationToken)
     {
         var result = await adminApiClient.GetTokenListAsync(filter, cancellationToken);
+        var authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, result);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
+
         ViewData["Title"] = "Token 清單";
         ViewData["ActiveNav"] = "Tokens";
 
@@ -67,6 +73,12 @@ public sealed class TokensController(IAdminApiClient adminApiClient) : Controlle
             },
             cancellationToken);
 
+        var authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, result);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
+
         if (!result.IsSuccess)
         {
             model.ErrorCode = result.ErrorCode;
@@ -83,8 +95,25 @@ public sealed class TokensController(IAdminApiClient adminApiClient) : Controlle
     public async Task<IActionResult> Detail(string tokenId, CancellationToken cancellationToken)
     {
         var detailResult = await adminApiClient.GetTokenDetailAsync(new TokenDetailRequest { TokenId = tokenId }, cancellationToken);
+        var authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, detailResult);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
+
         var usageResult = await adminApiClient.GetTokenUsageAsync(new TokenUsageRequest { TokenId = tokenId, PageNo = 1, PageSize = 10 }, cancellationToken);
+        authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, usageResult);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
+
         var actionResult = await adminApiClient.GetTokenActionLogsAsync(new TokenActionLogRequest { TokenId = tokenId, PageNo = 1, PageSize = 10 }, cancellationToken);
+        authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, actionResult);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
 
         ViewData["Title"] = "Token 詳細資料";
         ViewData["ActiveNav"] = "Tokens";
@@ -112,6 +141,12 @@ public sealed class TokensController(IAdminApiClient adminApiClient) : Controlle
     public async Task<IActionResult> Revoke(RevokeTokenFormModel form, CancellationToken cancellationToken)
     {
         var result = await adminApiClient.RevokeTokenAsync(new RevokeTokenRequest { TokenId = form.TokenId, Reason = form.Reason }, cancellationToken);
+        var authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, result);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
+
         SetTempResult(result.IsSuccess, "撤銷 Token", result.ErrorMessage ?? $"Token {form.TokenId} 已撤銷。", null);
         return RedirectToAction(nameof(Detail), new { tokenId = form.TokenId });
     }
@@ -132,6 +167,12 @@ public sealed class TokensController(IAdminApiClient adminApiClient) : Controlle
             },
             cancellationToken);
 
+        var authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, result);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
+
         SetTempResult(result.IsSuccess, "補發 Token", result.ErrorMessage ?? $"Token {form.TokenId} 已補發。", result.Data?.AccessToken);
         return RedirectToAction(nameof(Detail), new { tokenId = form.TokenId });
     }
@@ -148,6 +189,12 @@ public sealed class TokensController(IAdminApiClient adminApiClient) : Controlle
                 Reason = form.Reason
             },
             cancellationToken);
+
+        var authFailure = HandleAdminApiAuthFailure(adminSessionAccessor, result);
+        if (authFailure is not null)
+        {
+            return authFailure;
+        }
 
         SetTempResult(result.IsSuccess, "續期 Token", result.ErrorMessage ?? $"Token {form.TokenId} 已續期。", result.Data?.AccessToken);
         return RedirectToAction(nameof(Detail), new { tokenId = form.TokenId });

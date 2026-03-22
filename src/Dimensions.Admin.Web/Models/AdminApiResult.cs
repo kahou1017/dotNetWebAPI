@@ -13,4 +13,8 @@ public sealed record AdminApiResult<T>
     public string? ErrorMessage { get; init; }
 
     public T? Data { get; init; }
+
+    public bool IsUnauthorized => StatusCode == StatusCodes.Status401Unauthorized;
+
+    public bool IsForbidden => StatusCode == StatusCodes.Status403Forbidden;
 }

@@ -1,13 +1,7 @@
 @model TokenIndexPageModel
 
 <section class="surface-card">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
-        <div>
-            <h2>Token 清單</h2>
-            <div class="muted-text">可依條件查詢目前已建立的 token。</div>
-        </div>
-        <a class="btn btn-dark" asp-action="Create">建立 Token</a>
-    </div>
+    <partial name="_PageIntro" model='new PageIntroModel { Title = "Token 清單", Description = "可依條件查詢目前已建立的 token。", ActionText = "建立 Token", ActionUrl = Url.Action("Create") }' />
 
     <form method="get" class="filter-grid">
         <div>
@@ -32,40 +26,27 @@
     </form>
 </section>
 
-@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
-{
-    <div class="alert alert-danger">
-        <div>@Model.ErrorMessage</div>
-        @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
-        {
-            <div class="small">ErrorCode: @Model.ErrorCode</div>
-        }
-        @if (!string.IsNullOrWhiteSpace(Model.CaseId))
-        {
-            <div class="case-chip">caseId: @Model.CaseId</div>
-        }
-    </div>
-}
+<partial name="_ErrorAlert" model='new ErrorAlertModel { Title = "查詢 Token 失敗", ErrorMessage = Model.ErrorMessage, ErrorCode = Model.ErrorCode, CaseId = Model.CaseId }' />
 
 <section class="surface-card">
-    <div class="table-wrap">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>TokenId</th>
-                    <th>類型</th>
-                    <th>名稱</th>
-                    <th>User</th>
-                    <th>Scope</th>
-                    <th>狀態</th>
-                    <th>LastUsedAt</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            @if (Model.Result?.Items?.Any() == true)
-            {
-                foreach (var item in Model.Result.Items)
+    @if (Model.Result?.Items?.Any() == true)
+    {
+        <div class="table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>TokenId</th>
+                        <th>類型</th>
+                        <th>名稱</th>
+                        <th>User</th>
+                        <th>Scope</th>
+                        <th>狀態</th>
+                        <th>LastUsedAt</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Result.Items)
                 {
                     <tr>
                         <td><code>@item.TokenId</code></td>
@@ -80,14 +61,12 @@
                         <td><a class="btn btn-sm btn-outline-dark" asp-action="Detail" asp-route-tokenId="@item.TokenId">查看</a></td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="8" class="text-center muted-text py-4">目前查無符合條件的 token。</td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <partial name="_EmptyState" model='new EmptyStateModel { Message = "目前查無符合條件的 token。" }' />
+    }
 </section>

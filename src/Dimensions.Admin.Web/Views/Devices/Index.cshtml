@@ -1,32 +1,11 @@
 @model DeviceIndexPageModel
 
 <section class="surface-card">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
-        <div>
-            <h2>Device 清單</h2>
-            <div class="muted-text">可依使用者或裝置條件查詢目前已註冊的 device。</div>
-        </div>
-        <a class="btn btn-dark" asp-action="Create">建立 Device</a>
-    </div>
+    <partial name="_PageIntro" model='new PageIntroModel { Title = "Device 清單", Description = "可依使用者或裝置條件查詢目前已註冊的 device。", ActionText = "建立 Device", ActionUrl = Url.Action("Create") }' />
 
     @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
     {
         <div class="alert alert-info">@Model.ResultMessage</div>
-    }
-
-    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
-    {
-        <div class="alert alert-danger">
-            <div>@Model.ErrorMessage</div>
-            @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
-            {
-                <div class="small">ErrorCode: @Model.ErrorCode</div>
-            }
-            @if (!string.IsNullOrWhiteSpace(Model.CaseId))
-            {
-                <div class="case-chip">caseId: @Model.CaseId</div>
-            }
-        </div>
     }
 
     <form method="get" class="filter-grid">
@@ -42,8 +21,8 @@
             <label class="form-label">是否啟用</label>
             <select name="IsEnabled" class="form-select">
                 <option value="">全部</option>
-                <option value="true">啟用</option>
-                <option value="false">停用</option>
+                <option value="true" selected="@(Model.Filter.IsEnabled == true)">啟用</option>
+                <option value="false" selected="@(Model.Filter.IsEnabled == false)">停用</option>
             </select>
         </div>
         <div class="d-flex align-items-end">
@@ -52,14 +31,16 @@
     </form>
 </section>
 
+<partial name="_ErrorAlert" model='new ErrorAlertModel { Title = "查詢 Device 失敗", ErrorMessage = Model.ErrorMessage, ErrorCode = Model.ErrorCode, CaseId = Model.CaseId }' />
+
 <section class="surface-card">
-    <div class="table-wrap">
-        <table class="admin-table">
-            <thead><tr><th>UserId</th><th>DeviceId</th><th>名稱</th><th>類型</th><th>狀態</th><th>操作</th></tr></thead>
-            <tbody>
-            @if (Model.Result?.Items?.Any() == true)
-            {
-                foreach (var item in Model.Result.Items)
+    @if (Model.Result?.Items?.Any() == true)
+    {
+        <div class="table-wrap">
+            <table class="admin-table">
+                <thead><tr><th>UserId</th><th>DeviceId</th><th>名稱</th><th>類型</th><th>狀態</th><th>操作</th></tr></thead>
+                <tbody>
+                @foreach (var item in Model.Result.Items)
                 {
                     <tr>
                         <td>@item.UserId</td>
@@ -80,12 +61,12 @@
                         </td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr><td colspan="6" class="text-center muted-text py-4">目前查無符合條件的 device。</td></tr>
-            }
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <partial name="_EmptyState" model='new EmptyStateModel { Message = "目前查無符合條件的 device。" }' />
+    }
 </section>

@@ -1,0 +1,22 @@
+@model ForbiddenPageModel
+@{
+    Layout = "_Layout";
+}
+
+<section class="surface-card">
+    <h2>@Model.Title</h2>
+    <p class="muted-text">@Model.Message</p>
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
+    {
+        <div class="mt-3"><strong>ErrorCode:</strong> @Model.ErrorCode</div>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.CaseId))
+    {
+        <div class="case-chip mt-3">caseId: @Model.CaseId</div>
+    }
+
+    <div class="action-bar mt-4">
+        <a class="btn btn-dark" asp-controller="Home" asp-action="Index">回到首頁</a>
+    </div>
+</section>
