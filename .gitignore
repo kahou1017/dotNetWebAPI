@@ -21,6 +21,10 @@ obj/
 Logs/
 *.log
 
+# Local data protection keys
+DataProtectionKeys/
+src/Dimensions.Admin.Web/DataProtectionKeys/
+
 # Local databases
 *.db
 *.db-shm

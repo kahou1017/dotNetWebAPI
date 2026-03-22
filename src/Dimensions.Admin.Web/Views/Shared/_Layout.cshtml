@@ -1,0 +1,73 @@
+@inject Dimensions.Admin.Web.Services.IAdminSessionAccessor AdminSessionAccessor
+@{
+    var session = AdminSessionAccessor.GetCurrent();
+    var activeNav = (ViewData["ActiveNav"] as string) ?? string.Empty;
+    var title = (ViewData["Title"] as string) ?? "Dimensions Admin";
+
+    string NavClass(string value) => activeNav == value ? "admin-nav__link is-active" : "admin-nav__link";
+}
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@title - Dimensions Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="admin-shell">
+    @if (session is null)
+    {
+        <main class="admin-login-shell">
+            @RenderBody()
+        </main>
+    }
+    else
+    {
+        <div class="admin-shell__layout">
+            <aside class="admin-shell__sidebar">
+                <div class="brand-block">
+                    <div class="brand-block__eyebrow">Dimensions</div>
+                    <div class="brand-block__title">Admin Web</div>
+                    <div class="brand-block__subtitle">管理後台 MVP</div>
+                </div>
+
+                <nav class="admin-nav">
+                    <a class="@NavClass("Home")" asp-controller="Home" asp-action="Index">管理後台首頁</a>
+                    <a class="@NavClass("Tokens")" asp-controller="Tokens" asp-action="Index">Token 管理</a>
+                    <a class="@NavClass("Devices")" asp-controller="Devices" asp-action="Index">Device 管理</a>
+                    <a class="@NavClass("RequestLogs")" asp-controller="Logs" asp-action="Requests">Request Log</a>
+                    <a class="@NavClass("ExceptionLogs")" asp-controller="Logs" asp-action="Exceptions">Exception Log</a>
+                </nav>
+
+                <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-light w-100">登出</button>
+                </form>
+            </aside>
+
+            <div class="admin-shell__main">
+                <header class="admin-header">
+                    <div>
+                        <div class="admin-header__eyebrow">Dimensions Admin</div>
+                        <h1 class="admin-header__title">@title</h1>
+                    </div>
+                    <div class="admin-header__profile">
+                        <div class="admin-header__name">@session.DisplayName</div>
+                        <div class="admin-header__meta">@session.LoginAccount (@session.UserId)</div>
+                    </div>
+                </header>
+
+                <main class="admin-content">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

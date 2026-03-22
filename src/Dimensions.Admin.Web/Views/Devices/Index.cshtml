@@ -1,0 +1,91 @@
+@model DeviceIndexPageModel
+
+<section class="surface-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+        <div>
+            <h2>Device 清單</h2>
+            <div class="muted-text">可依使用者或裝置條件查詢目前已註冊的 device。</div>
+        </div>
+        <a class="btn btn-dark" asp-action="Create">建立 Device</a>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert alert-info">@Model.ResultMessage</div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            <div>@Model.ErrorMessage</div>
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
+            {
+                <div class="small">ErrorCode: @Model.ErrorCode</div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.CaseId))
+            {
+                <div class="case-chip">caseId: @Model.CaseId</div>
+            }
+        </div>
+    }
+
+    <form method="get" class="filter-grid">
+        <div>
+            <label class="form-label">UserId</label>
+            <input name="UserId" value="@Model.Filter.UserId" class="form-control" />
+        </div>
+        <div>
+            <label class="form-label">DeviceId</label>
+            <input name="DeviceId" value="@Model.Filter.DeviceId" class="form-control" />
+        </div>
+        <div>
+            <label class="form-label">是否啟用</label>
+            <select name="IsEnabled" class="form-select">
+                <option value="">全部</option>
+                <option value="true">啟用</option>
+                <option value="false">停用</option>
+            </select>
+        </div>
+        <div class="d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">查詢</button>
+        </div>
+    </form>
+</section>
+
+<section class="surface-card">
+    <div class="table-wrap">
+        <table class="admin-table">
+            <thead><tr><th>UserId</th><th>DeviceId</th><th>名稱</th><th>類型</th><th>狀態</th><th>操作</th></tr></thead>
+            <tbody>
+            @if (Model.Result?.Items?.Any() == true)
+            {
+                foreach (var item in Model.Result.Items)
+                {
+                    <tr>
+                        <td>@item.UserId</td>
+                        <td><code>@item.DeviceId</code></td>
+                        <td>@item.DeviceName</td>
+                        <td>@item.DeviceType</td>
+                        <td><span class="status-badge @(item.IsEnabled ? "status-badge--active" : "status-badge--danger")">@(item.IsEnabled ? "Enabled" : "Disabled")</span></td>
+                        <td>
+                            @if (item.IsEnabled)
+                            {
+                                <form asp-action="Disable" method="post" class="d-flex gap-2 align-items-center">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="DeviceId" value="@item.DeviceId" />
+                                    <input type="text" name="Reason" value="Disabled from Admin Web" class="form-control form-control-sm" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">停用</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="6" class="text-center muted-text py-4">目前查無符合條件的 device。</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</section>

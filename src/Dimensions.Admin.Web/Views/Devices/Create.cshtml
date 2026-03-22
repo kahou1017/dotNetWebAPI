@@ -1,0 +1,60 @@
+@model DeviceCreatePageModel
+
+<section class="surface-card">
+    <h2>建立 Device</h2>
+    <p class="muted-text">先建立裝置資料，後續可再由 token 管理流程手動綁定到對應的裝置。</p>
+
+    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+    {
+        <div class="alert alert-success">@Model.ResultMessage</div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            <div>@Model.ErrorMessage</div>
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
+            {
+                <div class="small">ErrorCode: @Model.ErrorCode</div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.CaseId))
+            {
+                <div class="case-chip">caseId: @Model.CaseId</div>
+            }
+        </div>
+    }
+
+    <form asp-action="Create" method="post" class="d-flex flex-column gap-3">
+        @Html.AntiForgeryToken()
+        <div class="form-grid">
+            <div>
+                <label asp-for="UserId" class="form-label"></label>
+                <input asp-for="UserId" class="form-control" />
+            </div>
+            <div>
+                <label asp-for="DeviceId" class="form-label"></label>
+                <input asp-for="DeviceId" class="form-control" />
+            </div>
+            <div>
+                <label asp-for="DeviceName" class="form-label"></label>
+                <input asp-for="DeviceName" class="form-control" />
+            </div>
+            <div>
+                <label asp-for="DeviceType" class="form-label"></label>
+                <input asp-for="DeviceType" class="form-control" />
+            </div>
+        </div>
+        <div>
+            <label asp-for="Remark" class="form-label"></label>
+            <textarea asp-for="Remark" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="action-bar">
+            <button type="submit" class="btn btn-dark">建立 Device</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">回到清單</a>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

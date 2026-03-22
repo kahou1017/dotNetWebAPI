@@ -1,0 +1,50 @@
+@model LoginPageModel
+@{
+    ViewData["Title"] = "管理員登入";
+    Layout = "_Layout";
+}
+
+<section class="login-panel">
+    <div class="brand-block__eyebrow text-dark">Dimensions</div>
+    <h1 class="login-panel__title">管理員登入</h1>
+    <p class="login-panel__subtitle">登入後可使用 <code>Dimensions.Admin.Api</code> 管理 token、device 與各種系統紀錄。</p>
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">
+            <div class="fw-semibold">登入失敗</div>
+            <div>@Model.ErrorMessage</div>
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
+            {
+                <div class="small mt-2">ErrorCode: @Model.ErrorCode</div>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.CaseId))
+            {
+                <div class="case-chip">caseId: @Model.CaseId</div>
+            }
+        </div>
+    }
+
+    <form asp-action="Login" method="post" class="d-flex flex-column gap-3">
+        @Html.AntiForgeryToken()
+        <div>
+            <label asp-for="LoginAccount" class="form-label"></label>
+            <input asp-for="LoginAccount" class="form-control form-control-lg" placeholder="例如：admin" />
+            <span asp-validation-for="LoginAccount" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control form-control-lg" placeholder="請輸入密碼" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-lg text-white" style="background-color: var(--admin-brand);">登入</button>
+    </form>
+
+    <div class="mt-4 muted-text">
+        測試帳號：admin / admin
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

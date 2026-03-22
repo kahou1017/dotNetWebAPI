@@ -1,0 +1,145 @@
+@model TokenDetailPageModel
+
+@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        <div>@Model.ErrorMessage</div>
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
+        {
+            <div class="small">ErrorCode: @Model.ErrorCode</div>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.CaseId))
+        {
+            <div class="case-chip">caseId: @Model.CaseId</div>
+        }
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+{
+    <div class="alert alert-info">
+        <div class="fw-semibold">@Model.ResultTitle</div>
+        <div>@Model.ResultMessage</div>
+        @if (!string.IsNullOrWhiteSpace(Model.ResultAccessToken))
+        {
+            <div class="mt-3 token-box">@Model.ResultAccessToken</div>
+        }
+    </div>
+}
+
+@if (Model.Detail is not null)
+{
+    <section class="surface-card">
+        <div class="d-flex justify-content-between flex-wrap gap-3">
+            <div>
+                <h2>@Model.Detail.TokenName</h2>
+                <div class="muted-text">@Model.Detail.TokenType / @Model.Detail.UserName (@Model.Detail.UserId)</div>
+            </div>
+            <span class="status-badge @(Model.Detail.Status == "Active" ? "status-badge--active" : "status-badge--danger")">@Model.Detail.Status</span>
+        </div>
+
+        <div class="summary-grid mt-3">
+            <div class="summary-tile"><div class="summary-tile__title">TokenId</div><div class="summary-tile__value"><code>@Model.Detail.TokenId</code></div></div>
+            <div class="summary-tile"><div class="summary-tile__title">JwtId</div><div class="summary-tile__value"><code>@Model.Detail.JwtId</code></div></div>
+            <div class="summary-tile"><div class="summary-tile__title">Scope</div><div class="summary-tile__value">@Model.Detail.Scope</div></div>
+            <div class="summary-tile"><div class="summary-tile__title">ExpireAt</div><div class="summary-tile__value">@Model.Detail.ExpireAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</div></div>
+        </div>
+    </section>
+
+    <section class="hero-grid">
+        <div class="surface-card">
+            <h3>撤銷</h3>
+            <form asp-action="Revoke" method="post" class="d-flex flex-column gap-2">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="RevokeForm.TokenId" />
+                <label asp-for="RevokeForm.Reason" class="form-label"></label>
+                <input asp-for="RevokeForm.Reason" class="form-control" />
+                <button type="submit" class="btn btn-outline-danger">撤銷 Token</button>
+            </form>
+        </div>
+
+        <div class="surface-card">
+            <h3>補發</h3>
+            <form asp-action="Reissue" method="post" class="d-flex flex-column gap-2">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ReissueForm.TokenId" />
+                <label asp-for="ReissueForm.EffectiveAt" class="form-label"></label>
+                <input asp-for="ReissueForm.EffectiveAt" type="datetime-local" value="@Model.ReissueForm.EffectiveAt.ToLocalTime().ToString("yyyy-MM-ddTHH:mm")" class="form-control" />
+                <label asp-for="ReissueForm.ExpireAt" class="form-label"></label>
+                <input asp-for="ReissueForm.ExpireAt" type="datetime-local" value="@Model.ReissueForm.ExpireAt?.ToLocalTime().ToString("yyyy-MM-ddTHH:mm")" class="form-control" />
+                <label asp-for="ReissueForm.Reason" class="form-label"></label>
+                <input asp-for="ReissueForm.Reason" class="form-control" />
+                <button type="submit" class="btn btn-outline-dark">補發 Token</button>
+            </form>
+        </div>
+
+        <div class="surface-card">
+            <h3>續期</h3>
+            <form asp-action="Renew" method="post" class="d-flex flex-column gap-2">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="RenewForm.TokenId" />
+                <label asp-for="RenewForm.NewExpireAt" class="form-label"></label>
+                <input asp-for="RenewForm.NewExpireAt" type="datetime-local" value="@Model.RenewForm.NewExpireAt?.ToLocalTime().ToString("yyyy-MM-ddTHH:mm")" class="form-control" />
+                <label asp-for="RenewForm.Reason" class="form-label"></label>
+                <input asp-for="RenewForm.Reason" class="form-control" />
+                <button type="submit" class="btn btn-outline-primary">續期 Token</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="surface-card">
+        <h3>Token Usage</h3>
+        <div class="table-wrap">
+            <table class="admin-table">
+                <thead><tr><th>RequestTime</th><th>Path</th><th>Method</th><th>ClientIp</th><th>結果</th></tr></thead>
+                <tbody>
+                @if (Model.UsageLogs?.Items?.Any() == true)
+                {
+                    foreach (var item in Model.UsageLogs.Items)
+                    {
+                        <tr>
+                            <td>@item.RequestTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@item.RequestPath</td>
+                            <td>@item.HttpMethod</td>
+                            <td>@item.ClientIp</td>
+                            <td><span class="status-badge @(item.IsSuccess ? "status-badge--success" : "status-badge--danger")">@(item.IsSuccess ? "Success" : "Failed")</span></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="5" class="text-center muted-text py-4">目前沒有 usage log。</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="surface-card">
+        <h3>Token Action Log</h3>
+        <div class="table-wrap">
+            <table class="admin-table">
+                <thead><tr><th>CreatedAt</th><th>ActionType</th><th>Operator</th><th>Before</th><th>After</th></tr></thead>
+                <tbody>
+                @if (Model.ActionLogs?.Items?.Any() == true)
+                {
+                    foreach (var item in Model.ActionLogs.Items)
+                    {
+                        <tr>
+                            <td>@item.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@item.ActionType</td>
+                            <td>@item.OperatorUserName (@item.OperatorUserId)</td>
+                            <td>@item.BeforeStatus</td>
+                            <td>@item.AfterStatus</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="5" class="text-center muted-text py-4">目前沒有 action log。</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}

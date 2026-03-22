@@ -1,80 +1,94 @@
-# 前端開發 TODO 清單
+# 前端 TODO 清單
 
 ## 開始前先看
 
-建議先閱讀以下正式文件，再開始動手：
+建議先閱讀：
 
-1. [00_master_index.md](../docs/00_master_index.md)
-2. [02_dotnet_webapi_architecture_spec.md](../docs/02_dotnet_webapi_architecture_spec.md)
-3. [08_admin_web_implementation_spec.md](../docs/08_admin_web_implementation_spec.md)
-4. [09_project_structure_guide.md](../docs/09_project_structure_guide.md)
+1. [../docs/00_master_index.md](../docs/00_master_index.md)
+2. [../docs/02_dotnet_webapi_architecture_spec.md](../docs/02_dotnet_webapi_architecture_spec.md)
+3. [../docs/08_admin_web_implementation_spec.md](../docs/08_admin_web_implementation_spec.md)
+4. [../docs/09_project_structure_guide.md](../docs/09_project_structure_guide.md)
 
-這份清單主要承接：
-
-- `Dimensions.Admin.Web`
-- ASP.NET Core MVC 管理前端
-- 與 `Dimensions.Admin.Api` 的整合
-
-## 適用範圍
-
-這份清單主要給：
+這份清單目前主要追蹤：
 
 - `Dimensions.Admin.Web`
+- ASP.NET Core MVC 管理後台
+- 與 `Dimensions.Admin.Api` 的前後端整合
 
-也就是管理後台前端。
+## 狀態說明
 
-## 使用方式
-
-- `[ ]` 代表尚未完成
-- `[x]` 代表已完成
-- 完成後請補上：
+- `[ ]` 未完成
+- `[x]` 已完成
+- 完成後請補：
   - `Completed: YYYY-MM-DD HH:mm`
 
 ## Priority 1
 
 ### 1. 專案建立
 
-- [ ] 建立 `Dimensions.Admin.Web`
-- [ ] 採用 ASP.NET Core MVC
-- [ ] 加入 solution
-- [ ] 建立 appsettings 與 Admin API Base URL
+- [x] 建立 `Dimensions.Admin.Web`
+  - `Completed: 2026-03-22 09:00`
+- [x] 採用 ASP.NET Core MVC
+  - `Completed: 2026-03-22 09:00`
+- [x] 納入 `Dimensions.sln`
+  - `Completed: 2026-03-22 09:00`
+- [x] 設定 `AdminApi:BaseUrl`
+  - `Completed: 2026-03-22 09:00`
 
 ### 2. 登入流程
 
-- [ ] `/login`
-- [ ] 呼叫 `POST /admin-api/auth/login`
-- [ ] 儲存 `AdminSession`
-- [ ] 呼叫 `GET /admin-api/auth/me`
-- [ ] 登出流程
+- [x] `/Account/Login`
+  - `Completed: 2026-03-22 09:00`
+- [x] 串接 `POST /admin-api/auth/login`
+  - `Completed: 2026-03-22 09:00`
+- [x] 建立 `AdminSession`
+  - `Completed: 2026-03-22 09:00`
+- [x] 登出流程
+  - `Completed: 2026-03-22 09:00`
 
 ### 3. App Shell
 
-- [ ] layout
-- [ ] side menu
-- [ ] page header
-- [ ] error / loading / empty state
+- [x] Layout
+  - `Completed: 2026-03-22 09:20`
+- [x] Side menu
+  - `Completed: 2026-03-22 09:20`
+- [x] Page header
+  - `Completed: 2026-03-22 09:20`
+- [x] 基本 empty / error state
+  - `Completed: 2026-03-22 09:20`
 
 ## Priority 2
 
 ### 4. Token 管理
 
-- [ ] `/tokens`
-- [ ] `/tokens/create`
-- [ ] `/tokens/{tokenId}`
-- [ ] revoke dialog
-- [ ] reissue dialog
-- [ ] renew dialog
+- [x] `/Tokens`
+  - `Completed: 2026-03-22 09:20`
+- [x] `/Tokens/Create`
+  - `Completed: 2026-03-22 09:20`
+- [x] `/tokens/{tokenId}`
+  - `Completed: 2026-03-22 09:20`
+- [x] revoke 流程
+  - `Completed: 2026-03-22 09:20`
+- [x] reissue 流程
+  - `Completed: 2026-03-22 09:20`
+- [x] renew 流程
+  - `Completed: 2026-03-22 09:20`
 
 ### 5. Device 管理
 
-- [ ] `/devices`
-- [ ] `/devices/create`
-- [ ] disable dialog
+- [x] `/Devices`
+  - `Completed: 2026-03-22 09:20`
+- [x] `/Devices/Create`
+  - `Completed: 2026-03-22 09:20`
+- [x] disable 流程
+  - `Completed: 2026-03-22 09:20`
 
 ### 6. Log 查詢
 
-- [ ] `/logs/token-usage`
-- [ ] `/logs/token-action`
+- [x] `/Logs/Requests`
+  - `Completed: 2026-03-22 09:20`
+- [x] `/Logs/Exceptions`
+  - `Completed: 2026-03-22 09:20`
 
 ## Priority 3
 
@@ -87,25 +101,21 @@
 - [ ] `LoadingOverlay`
 - [ ] `ConfirmDialog`
 
-### 8. API Client
+### 8. API Client 補強
 
-- [ ] GET / POST helper
-- [ ] Bearer token header
-- [ ] `ApiResponse<T>` 解析
-- [ ] `401 / 403` 錯誤處理
-- [ ] `caseId` 顯示
+- [x] GET / POST helper
+  - `Completed: 2026-03-22 09:00`
+- [x] Bearer token header
+  - `Completed: 2026-03-22 09:00`
+- [x] `ApiResponse<T>` 解析
+  - `Completed: 2026-03-22 09:00`
+- [ ] `401 / 403` 統一處理
+- [x] `caseId` 顯示
+  - `Completed: 2026-03-22 09:20`
 
-## 建議開發順序
+## 建議下一步
 
-1. 建專案
-2. 做登入
-3. 做 layout
-4. 做 token 管理
-5. 做 device 管理
-6. 做 log 查詢
-7. 最後整理共用元件
-
-## 補充說明
-
-- 這份清單應建立在 `Dimensions.Admin.Api` 邊界已定案之後
-- 如果後端 API 還在調整中，建議先回去看 [00_backend_todo_list.md](00_backend_todo_list.md)
+1. 把 Token / Device / Log 的搜尋條件做成共用元件
+2. 補 UI 細節與互動一致性
+3. 規劃 `401 / 403` 自動導向登入或錯誤頁
+4. 加入 `Dimensions.Admin.Web` 的自動化測試

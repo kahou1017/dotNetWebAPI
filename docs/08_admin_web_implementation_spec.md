@@ -2,184 +2,104 @@
 
 ## 目的
 
-這份文件定義 `Dimensions.Admin.Web` 的第一版實作方向。
+`Dimensions.Admin.Web` 是提供管理者使用的 MVC 後台，主要目的如下：
 
-它的角色很單純：
-
-- 提供管理員登入畫面
-- 提供 token 管理畫面
-- 提供 device 管理畫面
-- 提供管理查詢畫面
+- 管理員登入與登出
+- 管理 token
+- 管理 device
+- 查詢 request / exception 等系統紀錄
 
 ## 技術選型
 
-`Dimensions.Admin.Web` 採用：
+- 專案名稱：`Dimensions.Admin.Web`
+- 前端型態：`ASP.NET Core MVC`
+- API 來源：`Dimensions.Admin.Api`
+- Session 型態：伺服器端 Session
 
-- ASP.NET Core MVC
-
-選這個的原因：
-
-- 適合管理後台
-- 與整體 .NET solution 技術棧一致
-- 新手比較容易上手
-- 表單、查詢、清單、維護頁面都很適合
-
-## 與其他專案的關係
-
-### 呼叫方向
+## 專案依賴方向
 
 ```text
 Dimensions.Admin.Web
-  -> Dimensions.Admin.Api
-     -> Application / Domain / Infrastructure / Contracts
+  -> Dimensions.Contracts
+  -> Dimensions.Admin.Api (HTTP 呼叫)
 ```
 
-### 不直接呼叫的對象
+說明：
 
-`Dimensions.Admin.Web` 不應直接呼叫 `Dimensions.Api` 來做 token / device 管理。
+- `Admin.Web` 不直接連資料庫
+- `Admin.Web` 不直接呼叫 `Dimensions.Api`
+- 所有管理功能都應透過 `Dimensions.Admin.Api`
 
-管理操作應全部走：
+## 目前已完成的 MVP
 
-- `Dimensions.Admin.Api`
+### 1. 登入流程
 
-## 第一版功能範圍
+已完成：
 
-### 1. 登入
+- `/Account/Login`
+- 提交登入表單至 `POST /admin-api/auth/login`
+- 登入成功後建立 `AdminSession`
+- 可登出並清除 Session
 
-頁面：
+### 2. Dashboard 首頁
 
-- `/login`
+已完成：
 
-功能：
+- `/`
+- 顯示登入者資訊
+- 顯示快速入口
 
-- 管理員登入
-- 驗證目前登入狀態
-- 登出
+### 3. Token 管理
 
-### 2. Token 管理
+已完成：
 
-頁面：
-
-- `/tokens`
-- `/tokens/create`
+- `/Tokens`
+- `/Tokens/Create`
 - `/tokens/{tokenId}`
+- 撤銷 Token
+- 補發 Token
+- 續期 Token
 
-功能：
+### 4. Device 管理
 
-- 查 token 清單
-- 看 token 詳情
-- 建立 token
-- 撤銷 token
-- 補發 token
-- 續期 token
+已完成：
 
-補充：
+- `/Devices`
+- `/Devices/Create`
+- 停用 Device
 
-- `renew` 成功後，畫面應能取得新的 `accessToken`
-- `DeviceId` 欄位目前先保留，不強制 client 端先提供
-- 第一版可先建立「未綁定 device 的單裝置 token」
-- 後續可由管理頁面從 usage log 挑選候選來源，再做手動綁定
+### 5. Log 查詢
 
-### 3. Device 管理
+已完成：
 
-頁面：
+- `/Logs/Requests`
+- `/Logs/Exceptions`
 
-- `/devices`
-- `/devices/create`
+## Session 規則
 
-功能：
+- `AdminSession` 只存在 `Dimensions.Admin.Web`
+- Web 端將 `accessToken` 保存在伺服器端 Session
+- 每次呼叫 `Dimensions.Admin.Api` 時，自動帶入 Bearer Token
 
-- 查 device 清單
-- 建立 device
-- 停用 device
+## 畫面規則
 
-補充：
+第一版畫面以「先可用、再擴充」為主：
 
-- 停用 device 功能先保留
-- 等正式啟用 device 綁定後，再完整套用綁定 token 的停用規則
+- 保留清楚的側邊選單
+- 每頁都有一致的標題與錯誤區塊
+- 支援空資料狀態
+- 支援 `caseId` 顯示，方便對照 API log
 
-### 4. Log 查詢
+## 後續建議
 
-頁面：
+下一階段建議依序補強：
 
-- `/logs/token-usage`
-- `/logs/token-action`
-
-功能：
-
-- 查 token 使用紀錄
-- 查 token 操作紀錄
-
-## UI 原則
-
-### 原則 1：先把流程做順
-
-第一版不要追求太多花俏效果，先把：
-
-- 登入
-- 查詢
-- 建立
-- 維護
-
-這些主流程做穩。
-
-### 原則 2：錯誤訊息要清楚
-
-畫面應能顯示：
-
-- `ErrorCode`
-- `ErrorMessage`
-- `caseId`
-
-這樣開發與除錯都會比較容易。
-
-### 原則 3：共用元件要簡單
-
-建議先準備這些共用元件：
-
-- `SearchPanel`
-- `DataTable`
-- `ErrorAlert`
-- `EmptyState`
-- `LoadingOverlay`
-- `ConfirmDialog`
-
-## Session 與登入狀態
-
-第一版建議：
-
-- 將 `AdminSession` 暫存在 `sessionStorage`
-- 每次進入保護頁面時，呼叫 `GET /admin-api/auth/me` 驗證目前 session
-
-## 給新手的例子
-
-### 例子：建立一個給外部系統使用的 token
-
-1. 管理員登入 `Admin.Web`
-2. 進入 `/tokens/create`
-3. 選擇 `Integration`
-4. 填入使用者、名稱、有效時間
-5. 送出後取得新的 token
-6. 外部系統再拿這個 token 呼叫 `Dimensions.Api`
-
-重點：
-
-- `Admin.Web` 自己用的是 `AdminSession`
-- 新建立的業務 token 不是 `Admin.Web` 自己的登入 token
-
-## 第一版不做的事
-
-- 複雜 dashboard
-- 細粒度 RBAC
-- token 內容編輯
-- 高互動前端框架優化
-- BFF / cookie session 架構
-
-## 建議實作順序
-
-1. 建 `Dimensions.Admin.Web` 專案
-2. 建登入流程
-3. 建 token 清單與建立頁
-4. 建 token 詳情與操作流程
-5. 建 device 清單與維護流程
-6. 建 usage / action log 查詢
+1. Token / Device / Log 的搜尋條件 UI
+2. 共用元件
+   - `SearchPanel`
+   - `DataTable`
+   - `ErrorAlert`
+   - `EmptyState`
+   - `ConfirmDialog`
+3. 更完整的登入失效處理
+4. Admin.Web 自己的 UI / integration tests

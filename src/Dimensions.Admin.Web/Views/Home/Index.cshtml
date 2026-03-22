@@ -1,0 +1,57 @@
+@model DashboardViewModel
+
+<section class="hero-grid">
+    <div class="surface-card">
+        <div class="muted-text">目前登入管理員</div>
+        <h2>@Model.DisplayName</h2>
+        <div>@Model.LoginAccount (@Model.UserId)</div>
+        <p class="muted-text mt-3 mb-0">目前這是 <code>Dimensions.Admin.Web</code> 的 MVC 第一版，可先用來驗證登入、Token 管理、Device 管理與 Log 查詢流程。</p>
+    </div>
+
+    <div class="surface-card">
+        <h3>目前可操作的功能</h3>
+        <ul class="mb-0">
+            <li>管理員登入與登出</li>
+            <li>Token 清單、建立、撤銷、補發、續期</li>
+            <li>Device 清單、建立、停用</li>
+            <li>Request Log 與 Exception Log 查詢</li>
+        </ul>
+    </div>
+</section>
+
+<section class="summary-grid">
+    <div class="summary-tile">
+        <div class="summary-tile__title">目前架構</div>
+        <div class="summary-tile__value">Admin.Web / Admin.Api</div>
+    </div>
+    <div class="summary-tile">
+        <div class="summary-tile__title">登入型態</div>
+        <div class="summary-tile__value">AdminSession</div>
+    </div>
+    <div class="summary-tile">
+        <div class="summary-tile__title">技術基礎</div>
+        <div class="summary-tile__value">SQLite / Dapper / JWT</div>
+    </div>
+</section>
+
+<section class="surface-card">
+    <h3>快速入口</h3>
+    <div class="quick-link-grid">
+        <a class="quick-link-card" asp-controller="Tokens" asp-action="Index">
+            <div class="quick-link-card__title">Token 管理</div>
+            <div class="quick-link-card__text">查看 token 清單，並執行建立、撤銷、補發與續期。</div>
+        </a>
+        <a class="quick-link-card" asp-controller="Devices" asp-action="Index">
+            <div class="quick-link-card__title">Device 管理</div>
+            <div class="quick-link-card__text">查看 device 清單，建立新 device，或停用既有 device。</div>
+        </a>
+        <a class="quick-link-card" asp-controller="Logs" asp-action="Requests">
+            <div class="quick-link-card__title">Request Log</div>
+            <div class="quick-link-card__text">查看 API request 紀錄，快速追蹤路徑、狀態碼與 caseId。</div>
+        </a>
+        <a class="quick-link-card" asp-controller="Logs" asp-action="Exceptions">
+            <div class="quick-link-card__title">Exception Log</div>
+            <div class="quick-link-card__text">查看系統例外紀錄，快速掌握錯誤碼、訊息與發生時間。</div>
+        </a>
+    </div>
+</section>
