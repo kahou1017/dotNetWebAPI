@@ -7,7 +7,7 @@
 <section class="login-panel">
     <div class="brand-block__eyebrow text-dark">Dimensions</div>
     <h1 class="login-panel__title">管理員登入</h1>
-    <p class="login-panel__subtitle">登入後可使用 <code>Dimensions.Admin.Api</code> 管理 token、device 與各種系統紀錄。</p>
+    <p class="login-panel__subtitle">登入後即可管理 <code>Dimensions.Admin.Api</code> 的 token、device 與系統查詢功能。</p>
 
     @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
     {
@@ -25,7 +25,7 @@
         </div>
     }
 
-    <form asp-action="Login" method="post" class="d-flex flex-column gap-3">
+    <form asp-action="Login" method="post" class="d-flex flex-column gap-3 js-loading-form">
         @Html.AntiForgeryToken()
         <div>
             <label asp-for="LoginAccount" class="form-label"></label>
@@ -41,7 +41,7 @@
     </form>
 
     <div class="mt-4 muted-text">
-        測試帳號：admin / admin
+        開發帳號：admin / admin
     </div>
 </section>
 

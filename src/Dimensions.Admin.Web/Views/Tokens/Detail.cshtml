@@ -1,19 +1,6 @@
 @model TokenDetailPageModel
 
-@if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
-{
-    <div class="alert alert-danger">
-        <div>@Model.ErrorMessage</div>
-        @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
-        {
-            <div class="small">ErrorCode: @Model.ErrorCode</div>
-        }
-        @if (!string.IsNullOrWhiteSpace(Model.CaseId))
-        {
-            <div class="case-chip">caseId: @Model.CaseId</div>
-        }
-    </div>
-}
+<partial name="_ErrorAlert" model='new ErrorAlertModel { Title = "讀取 Token 詳細資料失敗", ErrorMessage = Model.ErrorMessage, ErrorCode = Model.ErrorCode, CaseId = Model.CaseId }' />
 
 @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
 {
@@ -49,7 +36,7 @@
     <section class="hero-grid">
         <div class="surface-card">
             <h3>撤銷</h3>
-            <form asp-action="Revoke" method="post" class="d-flex flex-column gap-2">
+            <form asp-action="Revoke" method="post" class="d-flex flex-column gap-2 js-loading-form js-confirm-submit" data-confirm-title="確認撤銷 Token" data-confirm-message="撤銷後此 token 將立即失效，你確定要繼續嗎？">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="RevokeForm.TokenId" />
                 <label asp-for="RevokeForm.Reason" class="form-label"></label>
@@ -60,7 +47,7 @@
 
         <div class="surface-card">
             <h3>補發</h3>
-            <form asp-action="Reissue" method="post" class="d-flex flex-column gap-2">
+            <form asp-action="Reissue" method="post" class="d-flex flex-column gap-2 js-loading-form js-confirm-submit" data-confirm-title="確認補發 Token" data-confirm-message="補發後會產生新的 token 內容，請確認目前設定是否正確。">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ReissueForm.TokenId" />
                 <label asp-for="ReissueForm.EffectiveAt" class="form-label"></label>
@@ -75,7 +62,7 @@
 
         <div class="surface-card">
             <h3>續期</h3>
-            <form asp-action="Renew" method="post" class="d-flex flex-column gap-2">
+            <form asp-action="Renew" method="post" class="d-flex flex-column gap-2 js-loading-form js-confirm-submit" data-confirm-title="確認續期 Token" data-confirm-message="續期會更新 token 的到期時間，你確定要繼續嗎？">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="RenewForm.TokenId" />
                 <label asp-for="RenewForm.NewExpireAt" class="form-label"></label>
@@ -108,7 +95,7 @@
                 }
                 else
                 {
-                    <tr><td colspan="5" class="text-center muted-text py-4">目前沒有 usage log。</td></tr>
+                    <tr><td colspan="5" class="text-center muted-text py-4">目前尚無 usage log。</td></tr>
                 }
                 </tbody>
             </table>
@@ -136,7 +123,7 @@
                 }
                 else
                 {
-                    <tr><td colspan="5" class="text-center muted-text py-4">目前沒有 action log。</td></tr>
+                    <tr><td colspan="5" class="text-center muted-text py-4">目前尚無 action log。</td></tr>
                 }
                 </tbody>
             </table>

@@ -311,6 +311,36 @@ body {
     color: var(--admin-muted);
 }
 
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 24, 24, 0.45);
+    backdrop-filter: blur(3px);
+    z-index: 2000;
+}
+
+.loading-overlay.is-visible {
+    display: flex;
+}
+
+.loading-overlay__panel {
+    min-width: 220px;
+    padding: 24px 28px;
+    border-radius: 20px;
+    background: rgba(20, 34, 34, 0.92);
+    color: #fffaf2;
+    text-align: center;
+    box-shadow: var(--admin-shadow);
+}
+
+.loading-overlay__text {
+    margin-top: 12px;
+    font-weight: 600;
+}
+
 @media (max-width: 960px) {
     .admin-shell__layout {
         grid-template-columns: 1fr;

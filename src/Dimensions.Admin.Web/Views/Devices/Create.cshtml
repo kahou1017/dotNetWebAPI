@@ -2,29 +2,16 @@
 
 <section class="surface-card">
     <h2>建立 Device</h2>
-    <p class="muted-text">先建立裝置資料，後續可再由 token 管理流程手動綁定到對應的裝置。</p>
+    <p class="muted-text">先建立可辨識的裝置資料，方便後續與 token 管理流程搭配使用。</p>
 
     @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
     {
         <div class="alert alert-success">@Model.ResultMessage</div>
     }
 
-    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
-    {
-        <div class="alert alert-danger">
-            <div>@Model.ErrorMessage</div>
-            @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
-            {
-                <div class="small">ErrorCode: @Model.ErrorCode</div>
-            }
-            @if (!string.IsNullOrWhiteSpace(Model.CaseId))
-            {
-                <div class="case-chip">caseId: @Model.CaseId</div>
-            }
-        </div>
-    }
+    <partial name="_ErrorAlert" model='new ErrorAlertModel { Title = "建立 Device 失敗", ErrorMessage = Model.ErrorMessage, ErrorCode = Model.ErrorCode, CaseId = Model.CaseId }' />
 
-    <form asp-action="Create" method="post" class="d-flex flex-column gap-3">
+    <form asp-action="Create" method="post" class="d-flex flex-column gap-3 js-loading-form">
         @Html.AntiForgeryToken()
         <div class="form-grid">
             <div>

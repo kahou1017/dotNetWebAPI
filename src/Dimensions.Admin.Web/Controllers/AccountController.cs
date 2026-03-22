@@ -19,7 +19,7 @@ public sealed class AccountController(IAdminApiClient adminApiClient, IAdminSess
         var model = new LoginPageModel();
         if (string.Equals(reason, "expired", StringComparison.OrdinalIgnoreCase))
         {
-            model.ErrorMessage = "管理員登入狀態已失效，請重新登入。";
+            model.ErrorMessage = "管理員工作階段已過期，請重新登入。";
         }
 
         return View(model);
@@ -45,7 +45,7 @@ public sealed class AccountController(IAdminApiClient adminApiClient, IAdminSess
         if (!result.IsSuccess || result.Data is null)
         {
             model.ErrorCode = result.ErrorCode;
-            model.ErrorMessage = result.ErrorMessage ?? "登入失敗，請確認帳號密碼。";
+            model.ErrorMessage = result.ErrorMessage ?? "登入失敗，請確認帳號與密碼是否正確。";
             model.CaseId = result.CaseId;
             return View(model);
         }

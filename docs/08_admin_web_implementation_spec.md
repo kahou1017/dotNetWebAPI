@@ -78,6 +78,8 @@ Dimensions.Admin.Web
 - `DataTable`
 - `ErrorAlert`
 - `EmptyState`
+- `LoadingOverlay`
+- `ConfirmDialog`
 
 這些 partial 用來統一 Token、Device、Log 頁面的查詢與清單呈現，讓後續新增畫面時可以直接沿用。
 
@@ -94,11 +96,12 @@ Dimensions.Admin.Web
 - 顯示錯誤碼與 `caseId`
 - `401` 時清除 Session 並導回登入頁
 - `403` 時導向 `Forbidden` 頁面
+- 重要操作會先跳出確認對話框
+- 表單送出期間會顯示全域 loading overlay
 
 ## 後續開發方向
 
 建議依序補強：
-1. Token / Device / Log 的操作確認體驗
-2. `ConfirmDialog`
-3. `LoadingOverlay`
-4. Admin.Web 的 UI / integration tests
+1. 補更多頁面的文案與操作細節
+2. Admin.Web 的 UI / integration tests
+3. 視需要補 Token / Device 操作結果頁面摘要

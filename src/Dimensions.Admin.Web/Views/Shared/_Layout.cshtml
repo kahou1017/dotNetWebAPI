@@ -33,14 +33,14 @@
                 </div>
 
                 <nav class="admin-nav">
-                    <a class="@NavClass("Home")" asp-controller="Home" asp-action="Index">管理後台首頁</a>
+                    <a class="@NavClass("Home")" asp-controller="Home" asp-action="Index">管理首頁</a>
                     <a class="@NavClass("Tokens")" asp-controller="Tokens" asp-action="Index">Token 管理</a>
                     <a class="@NavClass("Devices")" asp-controller="Devices" asp-action="Index">Device 管理</a>
                     <a class="@NavClass("RequestLogs")" asp-controller="Logs" asp-action="Requests">Request Log</a>
                     <a class="@NavClass("ExceptionLogs")" asp-controller="Logs" asp-action="Exceptions">Exception Log</a>
                 </nav>
 
-                <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form js-loading-form">
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-outline-light w-100">登出</button>
                 </form>
@@ -64,6 +64,9 @@
             </div>
         </div>
     }
+
+    <partial name="_LoadingOverlay" />
+    <partial name="_ConfirmDialog" />
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

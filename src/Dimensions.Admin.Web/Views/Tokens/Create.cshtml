@@ -2,24 +2,11 @@
 
 <section class="surface-card">
     <h2>建立 Token</h2>
-    <p class="muted-text">建立新的業務 token，可設定 scope、有效期限，以及是否保留裝置綁定欄位。</p>
+    <p class="muted-text">建立新的業務 token，並設定 scope、有效期限與是否需要單裝置綁定。</p>
 
-    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
-    {
-        <div class="alert alert-danger">
-            <div>@Model.ErrorMessage</div>
-            @if (!string.IsNullOrWhiteSpace(Model.ErrorCode))
-            {
-                <div class="small">ErrorCode: @Model.ErrorCode</div>
-            }
-            @if (!string.IsNullOrWhiteSpace(Model.CaseId))
-            {
-                <div class="case-chip">caseId: @Model.CaseId</div>
-            }
-        </div>
-    }
+    <partial name="_ErrorAlert" model='new ErrorAlertModel { Title = "建立 Token 失敗", ErrorMessage = Model.ErrorMessage, ErrorCode = Model.ErrorCode, CaseId = Model.CaseId }' />
 
-    <form asp-action="Create" method="post" class="d-flex flex-column gap-3">
+    <form asp-action="Create" method="post" class="d-flex flex-column gap-3 js-loading-form">
         @Html.AntiForgeryToken()
         <div class="form-grid">
             <div>
@@ -102,7 +89,7 @@
 @if (Model.CreatedToken is not null)
 {
     <section class="surface-card">
-        <h3>建立結果</h3>
+        <h3>建立完成</h3>
         <div class="summary-grid">
             <div class="summary-tile">
                 <div class="summary-tile__title">TokenId</div>

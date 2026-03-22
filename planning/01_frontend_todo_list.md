@@ -98,8 +98,10 @@
   - `Completed: 2026-03-22 13:05`
 - [x] `EmptyState`
   - `Completed: 2026-03-22 13:05`
-- [ ] `LoadingOverlay`
-- [ ] `ConfirmDialog`
+- [x] `LoadingOverlay`
+  - `Completed: 2026-03-22 14:40`
+- [x] `ConfirmDialog`
+  - `Completed: 2026-03-22 14:40`
 
 ### 8. API Client 強化
 
@@ -115,7 +117,6 @@
   - `Completed: 2026-03-22 09:20`
 
 ## 下一步建議
-1. 補上 Token / Device / Log 頁面的操作確認體驗
-2. 加入 `LoadingOverlay`
-3. 補 `ConfirmDialog`
-4. 規劃 `Dimensions.Admin.Web` 的 UI / integration tests
+1. 補上更多頁面的文案與操作細節
+2. 規劃 `Dimensions.Admin.Web` 的 UI / integration tests
+3. 視需要補 Token / Device 操作結果頁面摘要
