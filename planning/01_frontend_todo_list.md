@@ -1,11 +1,13 @@
 # 前端 TODO 清單
 
 ## 開始前先看
+
 建議先依序閱讀：
 1. [../docs/00_master_index.md](../docs/00_master_index.md)
 2. [../docs/02_dotnet_webapi_architecture_spec.md](../docs/02_dotnet_webapi_architecture_spec.md)
 3. [../docs/08_admin_web_implementation_spec.md](../docs/08_admin_web_implementation_spec.md)
 4. [../docs/09_project_structure_guide.md](../docs/09_project_structure_guide.md)
+5. [../docs/10_api_development_guide.md](../docs/10_api_development_guide.md)
 
 這份清單聚焦於：
 - `Dimensions.Admin.Web`
@@ -13,6 +15,7 @@
 - 透過 `Dimensions.Admin.Api` 呼叫管理 API
 
 ## 狀態規則
+
 - `[ ]` 未完成
 - `[x]` 已完成
 - 完成後補上時間：
@@ -116,7 +119,13 @@
 - [x] `caseId` 顯示
   - `Completed: 2026-03-22 09:20`
 
+### 9. 驗證流程
+
+- [x] `Admin.Web` smoke test script
+  - `Completed: 2026-03-22 15:15`
+
 ## 下一步建議
+
 1. 補上更多頁面的文案與操作細節
 2. 規劃 `Dimensions.Admin.Web` 的 UI / integration tests
 3. 視需要補 Token / Device 操作結果頁面摘要
