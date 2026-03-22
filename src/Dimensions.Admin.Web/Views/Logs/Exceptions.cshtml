@@ -1,0 +1,21 @@
+@model ExceptionLogsPageModel
+
+<partial name="_SearchPanel" model='new SearchPanelModel
+{
+    Title = "Exception Log",
+    Description = "依 Path、UserId、ErrorCode 或 ExceptionType 查詢例外紀錄，快速定位失敗請求。",
+    FieldsPartialName = "Logs/_ExceptionLogFilters",
+    FieldsModel = Model,
+    ResetUrl = Url.Action("Exceptions"),
+    SubmitText = "查詢"
+}' />
+
+<partial name="_ErrorAlert" model='new ErrorAlertModel { Title = "查詢 Exception Log 失敗", ErrorMessage = Model.ErrorMessage, ErrorCode = Model.ErrorCode, CaseId = Model.CaseId }' />
+
+<partial name="_DataTable" model='new DataTableModel
+{
+    HasItems = Model.Result?.Items?.Any() == true,
+    TablePartialName = "Logs/_ExceptionLogTable",
+    TableModel = Model,
+    EmptyMessage = "目前查無符合條件的 exception log。"
+}' />

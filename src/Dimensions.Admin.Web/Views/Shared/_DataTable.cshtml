@@ -1,0 +1,14 @@
+@model DataTableModel
+
+<section class="surface-card">
+    @if (Model.HasItems)
+    {
+        <div class="table-wrap">
+            <partial name="@Model.TablePartialName" model="Model.TableModel" />
+        </div>
+    }
+    else
+    {
+        <partial name="_EmptyState" model="new EmptyStateModel { Message = Model.EmptyMessage }" />
+    }
+</section>

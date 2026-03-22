@@ -1,0 +1,16 @@
+@model SearchPanelModel
+
+<section class="surface-card">
+    <partial name="_PageIntro" model="new PageIntroModel { Title = Model.Title, Description = Model.Description }" />
+
+    <form method="@Model.Method" action="@Model.ActionUrl" class="filter-grid">
+        <partial name="@Model.FieldsPartialName" model="Model.FieldsModel" />
+        <div class="search-panel__actions">
+            <button type="submit" class="btn btn-primary w-100">@Model.SubmitText</button>
+            @if (!string.IsNullOrWhiteSpace(Model.ResetUrl))
+            {
+                <a class="btn btn-outline-secondary w-100" href="@Model.ResetUrl">清除條件</a>
+            }
+        </div>
+    </form>
+</section>

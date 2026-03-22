@@ -1,0 +1,18 @@
+@model DeviceIndexPageModel
+
+<div>
+    <label class="form-label">UserId</label>
+    <input name="UserId" value="@Model.Filter.UserId" class="form-control" />
+</div>
+<div>
+    <label class="form-label">DeviceId</label>
+    <input name="DeviceId" value="@Model.Filter.DeviceId" class="form-control" />
+</div>
+<div>
+    <label class="form-label">啟用狀態</label>
+    <select name="IsEnabled" class="form-select">
+        <option value="">全部</option>
+        <option value="true" selected="@(Model.Filter.IsEnabled == true)">啟用</option>
+        <option value="false" selected="@(Model.Filter.IsEnabled == false)">停用</option>
+    </select>
+</div>

@@ -1,0 +1,21 @@
+@model RequestLogsPageModel
+
+<partial name="_SearchPanel" model='new SearchPanelModel
+{
+    Title = "Request Log",
+    Description = "依 Path、UserId、TokenId 或狀態碼查詢 request log，快速回看 API 存取紀錄。",
+    FieldsPartialName = "Logs/_RequestLogFilters",
+    FieldsModel = Model,
+    ResetUrl = Url.Action("Requests"),
+    SubmitText = "查詢"
+}' />
+
+<partial name="_ErrorAlert" model='new ErrorAlertModel { Title = "查詢 Request Log 失敗", ErrorMessage = Model.ErrorMessage, ErrorCode = Model.ErrorCode, CaseId = Model.CaseId }' />
+
+<partial name="_DataTable" model='new DataTableModel
+{
+    HasItems = Model.Result?.Items?.Any() == true,
+    TablePartialName = "Logs/_RequestLogTable",
+    TableModel = Model,
+    EmptyMessage = "目前查無符合條件的 request log。"
+}' />

@@ -18,8 +18,9 @@ obj/
 *.sln.docstates
 
 # Logs
-Logs/
+/Logs/
 *.log
+*.binlog
 
 # Local data protection keys
 DataProtectionKeys/

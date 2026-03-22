@@ -1,30 +1,26 @@
 # 前端 TODO 清單
 
 ## 開始前先看
-
-建議先閱讀：
-
+建議先依序閱讀：
 1. [../docs/00_master_index.md](../docs/00_master_index.md)
 2. [../docs/02_dotnet_webapi_architecture_spec.md](../docs/02_dotnet_webapi_architecture_spec.md)
 3. [../docs/08_admin_web_implementation_spec.md](../docs/08_admin_web_implementation_spec.md)
 4. [../docs/09_project_structure_guide.md](../docs/09_project_structure_guide.md)
 
-這份清單目前主要追蹤：
-
+這份清單聚焦於：
 - `Dimensions.Admin.Web`
 - ASP.NET Core MVC 管理後台
-- 與 `Dimensions.Admin.Api` 的前後端整合
+- 透過 `Dimensions.Admin.Api` 呼叫管理 API
 
-## 狀態說明
-
+## 狀態規則
 - `[ ]` 未完成
 - `[x]` 已完成
-- 完成後請補：
+- 完成後補上時間：
   - `Completed: YYYY-MM-DD HH:mm`
 
 ## Priority 1
 
-### 1. 專案建立
+### 1. 專案初始化
 
 - [x] 建立 `Dimensions.Admin.Web`
   - `Completed: 2026-03-22 09:00`
@@ -43,7 +39,7 @@
   - `Completed: 2026-03-22 09:00`
 - [x] 建立 `AdminSession`
   - `Completed: 2026-03-22 09:00`
-- [x] 登出流程
+- [x] 登入後導頁
   - `Completed: 2026-03-22 09:00`
 
 ### 3. App Shell
@@ -92,10 +88,12 @@
 
 ## Priority 3
 
-### 7. 共用元件
+### 7. 共用 UI 元件
 
-- [ ] `SearchPanel`
-- [ ] `DataTable`
+- [x] `SearchPanel`
+  - `Completed: 2026-03-22 14:10`
+- [x] `DataTable`
+  - `Completed: 2026-03-22 14:10`
 - [x] `ErrorAlert`
   - `Completed: 2026-03-22 13:05`
 - [x] `EmptyState`
@@ -103,7 +101,7 @@
 - [ ] `LoadingOverlay`
 - [ ] `ConfirmDialog`
 
-### 8. API Client 補強
+### 8. API Client 強化
 
 - [x] GET / POST helper
   - `Completed: 2026-03-22 09:00`
@@ -116,9 +114,8 @@
 - [x] `caseId` 顯示
   - `Completed: 2026-03-22 09:20`
 
-## 建議下一步
-
-1. 把 Token / Device / Log 的搜尋條件做成共用元件
-2. 補 UI 細節與互動一致性
-3. 規劃 `401 / 403` 自動導向登入或錯誤頁
-4. 加入 `Dimensions.Admin.Web` 的自動化測試
+## 下一步建議
+1. 補上 Token / Device / Log 頁面的操作確認體驗
+2. 加入 `LoadingOverlay`
+3. 補 `ConfirmDialog`
+4. 規劃 `Dimensions.Admin.Web` 的 UI / integration tests

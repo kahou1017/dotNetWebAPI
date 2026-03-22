@@ -1,58 +1,55 @@
 # Admin Web 實作規格
 
-## 目的
+## 目標
 
-`Dimensions.Admin.Web` 是提供管理者使用的 MVC 後台，主要目的如下：
+`Dimensions.Admin.Web` 是管理後台前端，採用 ASP.NET Core MVC，負責提供管理員操作畫面。
 
-- 管理員登入與登出
-- 管理 token
-- 管理 device
-- 查詢 request / exception 等系統紀錄
+目前主要涵蓋：
+- 管理員登入
+- Token 管理
+- Device 管理
+- Request / Exception Log 查詢
 
 ## 技術選型
 
 - 專案名稱：`Dimensions.Admin.Web`
-- 前端型態：`ASP.NET Core MVC`
+- 前端技術：`ASP.NET Core MVC`
 - API 來源：`Dimensions.Admin.Api`
-- Session 型態：伺服器端 Session
+- Session 策略：登入後以 Session 保存管理員工作階段
 
 ## 專案依賴方向
 
 ```text
 Dimensions.Admin.Web
   -> Dimensions.Contracts
-  -> Dimensions.Admin.Api (HTTP 呼叫)
+  -> Dimensions.Admin.Api (透過 HTTP 呼叫)
 ```
 
-說明：
-
+設計原則：
 - `Admin.Web` 不直接連資料庫
 - `Admin.Web` 不直接呼叫 `Dimensions.Api`
-- 所有管理功能都應透過 `Dimensions.Admin.Api`
+- 所有管理功能都透過 `Dimensions.Admin.Api`
 
-## 目前已完成的 MVP
+## 第一版 MVP 範圍
 
 ### 1. 登入流程
 
 已完成：
-
 - `/Account/Login`
-- 提交登入表單至 `POST /admin-api/auth/login`
-- 登入成功後建立 `AdminSession`
-- 可登出並清除 Session
+- 串接 `POST /admin-api/auth/login`
+- 建立 `AdminSession`
+- 登出後清除 Session
 
 ### 2. Dashboard 首頁
 
 已完成：
-
 - `/`
-- 顯示登入者資訊
-- 顯示快速入口
+- 顯示目前登入管理員資訊
+- 顯示快速入口與主要管理功能
 
 ### 3. Token 管理
 
 已完成：
-
 - `/Tokens`
 - `/Tokens/Create`
 - `/tokens/{tokenId}`
@@ -63,7 +60,6 @@ Dimensions.Admin.Web
 ### 4. Device 管理
 
 已完成：
-
 - `/Devices`
 - `/Devices/Create`
 - 停用 Device
@@ -71,47 +67,38 @@ Dimensions.Admin.Web
 ### 5. Log 查詢
 
 已完成：
-
 - `/Logs/Requests`
 - `/Logs/Exceptions`
 
-### 6. 共用畫面元件
+### 6. 共用 UI 元件
 
 已完成：
-
+- `PageIntro`
+- `SearchPanel`
+- `DataTable`
 - `ErrorAlert`
 - `EmptyState`
-- `PageIntro`
 
-這些 partial 已套用在 Token、Device、Log 頁面，讓錯誤與空資料狀態維持一致。
+這些 partial 用來統一 Token、Device、Log 頁面的查詢與清單呈現，讓後續新增畫面時可以直接沿用。
 
-## Session 規則
+## Session 策略
 
-- `AdminSession` 只存在 `Dimensions.Admin.Web`
-- Web 端將 `accessToken` 保存在伺服器端 Session
-- 每次呼叫 `Dimensions.Admin.Api` 時，自動帶入 Bearer Token
+- `AdminSession` 僅存在於 `Dimensions.Admin.Web`
+- Web 端會把 `accessToken` 保存在伺服器端 Session
+- 呼叫 `Dimensions.Admin.Api` 時，自動帶入 Bearer Token
 
-## 畫面規則
+## 錯誤處理
 
-第一版畫面以「先可用、再擴充」為主：
+目前已完成的統一處理包含：
+- 顯示 API 回傳的錯誤訊息
+- 顯示錯誤碼與 `caseId`
+- `401` 時清除 Session 並導回登入頁
+- `403` 時導向 `Forbidden` 頁面
 
-- 保留清楚的側邊選單
-- 每頁都有一致的標題與錯誤區塊
-- 支援空資料狀態
-- 支援 `caseId` 顯示，方便對照 API log
-- `401` 會清除 Session 並導回登入頁
-- `403` 會導向統一的 `Forbidden` 頁面
+## 後續開發方向
 
-## 後續建議
-
-下一階段建議依序補強：
-
-1. Token / Device / Log 的搜尋條件 UI
-2. 共用元件
-   - `SearchPanel`
-   - `DataTable`
-   - `ErrorAlert`
-   - `EmptyState`
-   - `ConfirmDialog`
-3. 更完整的登入失效處理
-4. Admin.Web 自己的 UI / integration tests
+建議依序補強：
+1. Token / Device / Log 的操作確認體驗
+2. `ConfirmDialog`
+3. `LoadingOverlay`
+4. Admin.Web 的 UI / integration tests

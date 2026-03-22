@@ -1,0 +1,33 @@
+@model TokenIndexPageModel
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>TokenId</th>
+            <th>類型</th>
+            <th>名稱</th>
+            <th>使用者</th>
+            <th>Scope</th>
+            <th>狀態</th>
+            <th>最後使用時間</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Result!.Items)
+    {
+        <tr>
+            <td><code>@item.TokenId</code></td>
+            <td>@item.TokenType</td>
+            <td>@item.TokenName</td>
+            <td>@item.UserName<br /><span class="muted-text">@item.UserId</span></td>
+            <td>@item.Scope</td>
+            <td>
+                <span class="status-badge @(item.Status == "Active" ? "status-badge--active" : "status-badge--danger")">@item.Status</span>
+            </td>
+            <td>@item.LastUsedAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+            <td><a class="btn btn-sm btn-outline-dark" asp-action="Detail" asp-route-tokenId="@item.TokenId">詳細</a></td>
+        </tr>
+    }
+    </tbody>
+</table>

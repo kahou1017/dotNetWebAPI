@@ -1,72 +1,25 @@
 @model TokenIndexPageModel
 
-<section class="surface-card">
-    <partial name="_PageIntro" model='new PageIntroModel { Title = "Token 清單", Description = "可依條件查詢目前已建立的 token。", ActionText = "建立 Token", ActionUrl = Url.Action("Create") }' />
-
-    <form method="get" class="filter-grid">
-        <div>
-            <label class="form-label">TokenType</label>
-            <input name="TokenType" value="@Model.Filter.TokenType" class="form-control" />
-        </div>
-        <div>
-            <label class="form-label">UserId</label>
-            <input name="UserId" value="@Model.Filter.UserId" class="form-control" />
-        </div>
-        <div>
-            <label class="form-label">Status</label>
-            <input name="Status" value="@Model.Filter.Status" class="form-control" />
-        </div>
-        <div>
-            <label class="form-label">PageSize</label>
-            <input name="PageSize" value="@Model.Filter.PageSize" class="form-control" />
-        </div>
-        <div class="d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">查詢</button>
-        </div>
-    </form>
-</section>
+<partial name="_SearchPanel" model='new SearchPanelModel
+{
+    Title = "Token 清單",
+    Description = "在這裡查詢已建立的 token，快速查看使用者、範圍與目前狀態。",
+    FieldsPartialName = "Tokens/_TokenFilters",
+    FieldsModel = Model,
+    ResetUrl = Url.Action("Index"),
+    SubmitText = "查詢"
+}' />
 
 <partial name="_ErrorAlert" model='new ErrorAlertModel { Title = "查詢 Token 失敗", ErrorMessage = Model.ErrorMessage, ErrorCode = Model.ErrorCode, CaseId = Model.CaseId }' />
 
-<section class="surface-card">
-    @if (Model.Result?.Items?.Any() == true)
-    {
-        <div class="table-wrap">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>TokenId</th>
-                        <th>類型</th>
-                        <th>名稱</th>
-                        <th>User</th>
-                        <th>Scope</th>
-                        <th>狀態</th>
-                        <th>LastUsedAt</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach (var item in Model.Result.Items)
-                {
-                    <tr>
-                        <td><code>@item.TokenId</code></td>
-                        <td>@item.TokenType</td>
-                        <td>@item.TokenName</td>
-                        <td>@item.UserName<br /><span class="muted-text">@item.UserId</span></td>
-                        <td>@item.Scope</td>
-                        <td>
-                            <span class="status-badge @(item.Status == "Active" ? "status-badge--active" : "status-badge--danger")">@item.Status</span>
-                        </td>
-                        <td>@item.LastUsedAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
-                        <td><a class="btn btn-sm btn-outline-dark" asp-action="Detail" asp-route-tokenId="@item.TokenId">查看</a></td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <partial name="_EmptyState" model='new EmptyStateModel { Message = "目前查無符合條件的 token。" }' />
-    }
-</section>
+<div class="action-bar">
+    <a class="btn btn-dark" asp-action="Create">建立 Token</a>
+</div>
+
+<partial name="_DataTable" model='new DataTableModel
+{
+    HasItems = Model.Result?.Items?.Any() == true,
+    TablePartialName = "Tokens/_TokenTable",
+    TableModel = Model,
+    EmptyMessage = "目前查無符合條件的 token。"
+}' />

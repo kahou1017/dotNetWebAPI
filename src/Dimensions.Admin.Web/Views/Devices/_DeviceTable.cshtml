@@ -1,0 +1,37 @@
+@model DeviceIndexPageModel
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>UserId</th>
+            <th>DeviceId</th>
+            <th>名稱</th>
+            <th>類型</th>
+            <th>狀態</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Result!.Items)
+    {
+        <tr>
+            <td>@item.UserId</td>
+            <td><code>@item.DeviceId</code></td>
+            <td>@item.DeviceName</td>
+            <td>@item.DeviceType</td>
+            <td><span class="status-badge @(item.IsEnabled ? "status-badge--active" : "status-badge--danger")">@(item.IsEnabled ? "Enabled" : "Disabled")</span></td>
+            <td>
+                @if (item.IsEnabled)
+                {
+                    <form asp-action="Disable" method="post" class="d-flex gap-2 align-items-center">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="DeviceId" value="@item.DeviceId" />
+                        <input type="text" name="Reason" value="Disabled from Admin Web" class="form-control form-control-sm" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger">停用</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

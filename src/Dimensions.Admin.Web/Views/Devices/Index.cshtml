@@ -1,72 +1,30 @@
 @model DeviceIndexPageModel
 
-<section class="surface-card">
-    <partial name="_PageIntro" model='new PageIntroModel { Title = "Device 清單", Description = "可依使用者或裝置條件查詢目前已註冊的 device。", ActionText = "建立 Device", ActionUrl = Url.Action("Create") }' />
+<partial name="_SearchPanel" model='new SearchPanelModel
+{
+    Title = "Device 清單",
+    Description = "查詢已註冊的裝置，並可直接停用不再使用的 device。",
+    FieldsPartialName = "Devices/_DeviceFilters",
+    FieldsModel = Model,
+    ResetUrl = Url.Action("Index"),
+    SubmitText = "查詢"
+}' />
 
-    @if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
-    {
-        <div class="alert alert-info">@Model.ResultMessage</div>
-    }
-
-    <form method="get" class="filter-grid">
-        <div>
-            <label class="form-label">UserId</label>
-            <input name="UserId" value="@Model.Filter.UserId" class="form-control" />
-        </div>
-        <div>
-            <label class="form-label">DeviceId</label>
-            <input name="DeviceId" value="@Model.Filter.DeviceId" class="form-control" />
-        </div>
-        <div>
-            <label class="form-label">是否啟用</label>
-            <select name="IsEnabled" class="form-select">
-                <option value="">全部</option>
-                <option value="true" selected="@(Model.Filter.IsEnabled == true)">啟用</option>
-                <option value="false" selected="@(Model.Filter.IsEnabled == false)">停用</option>
-            </select>
-        </div>
-        <div class="d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">查詢</button>
-        </div>
-    </form>
-</section>
+@if (!string.IsNullOrWhiteSpace(Model.ResultMessage))
+{
+    <div class="alert alert-info">@Model.ResultMessage</div>
+}
 
 <partial name="_ErrorAlert" model='new ErrorAlertModel { Title = "查詢 Device 失敗", ErrorMessage = Model.ErrorMessage, ErrorCode = Model.ErrorCode, CaseId = Model.CaseId }' />
 
-<section class="surface-card">
-    @if (Model.Result?.Items?.Any() == true)
-    {
-        <div class="table-wrap">
-            <table class="admin-table">
-                <thead><tr><th>UserId</th><th>DeviceId</th><th>名稱</th><th>類型</th><th>狀態</th><th>操作</th></tr></thead>
-                <tbody>
-                @foreach (var item in Model.Result.Items)
-                {
-                    <tr>
-                        <td>@item.UserId</td>
-                        <td><code>@item.DeviceId</code></td>
-                        <td>@item.DeviceName</td>
-                        <td>@item.DeviceType</td>
-                        <td><span class="status-badge @(item.IsEnabled ? "status-badge--active" : "status-badge--danger")">@(item.IsEnabled ? "Enabled" : "Disabled")</span></td>
-                        <td>
-                            @if (item.IsEnabled)
-                            {
-                                <form asp-action="Disable" method="post" class="d-flex gap-2 align-items-center">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="DeviceId" value="@item.DeviceId" />
-                                    <input type="text" name="Reason" value="Disabled from Admin Web" class="form-control form-control-sm" />
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">停用</button>
-                                </form>
-                            }
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <partial name="_EmptyState" model='new EmptyStateModel { Message = "目前查無符合條件的 device。" }' />
-    }
-</section>
+<div class="action-bar">
+    <a class="btn btn-dark" asp-action="Create">建立 Device</a>
+</div>
+
+<partial name="_DataTable" model='new DataTableModel
+{
+    HasItems = Model.Result?.Items?.Any() == true,
+    TablePartialName = "Devices/_DeviceTable",
+    TableModel = Model,
+    EmptyMessage = "目前查無符合條件的 device。"
+}' />

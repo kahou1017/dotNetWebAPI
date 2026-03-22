@@ -19,7 +19,7 @@ public sealed class LogsController(IAdminApiClient adminApiClient, IAdminSession
             return authFailure;
         }
 
-        ViewData["Title"] = "Request Log";
+        ViewData["Title"] = "Request Log 查詢";
         ViewData["ActiveNav"] = "RequestLogs";
 
         return View(new RequestLogsPageModel
@@ -42,7 +42,7 @@ public sealed class LogsController(IAdminApiClient adminApiClient, IAdminSession
             return authFailure;
         }
 
-        ViewData["Title"] = "Exception Log";
+        ViewData["Title"] = "Exception Log 查詢";
         ViewData["ActiveNav"] = "ExceptionLogs";
 
         return View(new ExceptionLogsPageModel

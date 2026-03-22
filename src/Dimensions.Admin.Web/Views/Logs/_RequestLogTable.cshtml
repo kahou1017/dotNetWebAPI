@@ -1,0 +1,25 @@
+@model RequestLogsPageModel
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>RequestTime</th>
+            <th>Path</th>
+            <th>Status</th>
+            <th>UserId</th>
+            <th>CaseId</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Result!.Items)
+    {
+        <tr>
+            <td>@item.RequestTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+            <td>@item.RequestPath</td>
+            <td>@item.StatusCode</td>
+            <td>@item.UserId</td>
+            <td><code>@item.CaseId</code></td>
+        </tr>
+    }
+    </tbody>
+</table>

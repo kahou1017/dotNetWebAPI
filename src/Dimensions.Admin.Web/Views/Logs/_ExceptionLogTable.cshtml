@@ -1,0 +1,25 @@
+@model ExceptionLogsPageModel
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>OccurredAt</th>
+            <th>Path</th>
+            <th>ErrorCode</th>
+            <th>Message</th>
+            <th>CaseId</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Result!.Items)
+    {
+        <tr>
+            <td>@item.OccurredAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+            <td>@item.RequestPath</td>
+            <td>@item.ErrorCode</td>
+            <td>@item.ErrorMessage</td>
+            <td><code>@item.CaseId</code></td>
+        </tr>
+    }
+    </tbody>
+</table>
