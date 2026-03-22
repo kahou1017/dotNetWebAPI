@@ -1,8 +1,19 @@
 @Dimensions.Admin.Api_HostAddress = http://localhost:5250
 @AdminAccount = admin
 @AdminPassword = admin
+@IssuedUserId = USERHTTP001
+@IssuedUserName = Http Test User
+@IssuedTokenName = Customer Query Http Token
+@IssuedScope = customer.query
+
+### 使用說明
+# 1. 先執行 Admin Login
+# 2. 再執行 Admin Me
+# 3. 再執行 Create User Token
+# 4. 視需要執行 token / log / 錯誤情境測試
 
 ### Admin Login
+# @name admin_login
 POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/auth/login
 Content-Type: application/json
 
@@ -11,39 +22,71 @@ Content-Type: application/json
   "password": "{{AdminPassword}}"
 }
 
-### Public API
 ### Admin Me
 GET {{Dimensions.Admin.Api_HostAddress}}/admin-api/auth/me
 Accept: application/json
-Authorization: Bearer {{admin_token}}
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
 
 ### Create User Token
+# @name create_user_token
 POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/create
 Content-Type: application/json
-Authorization: Bearer {{admin_token}}
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
 
 {
   "tokenType": "UserAccess",
-  "userId": "USER001",
-  "userName": "Kevin",
-  "tokenName": "Kevin Main Token",
-  "isSingleDevice": true,
-  "effectiveAt": "2026-03-20T00:00:00Z",
+  "userId": "{{IssuedUserId}}",
+  "userName": "{{IssuedUserName}}",
+  "tokenName": "{{IssuedTokenName}}",
+  "scope": "{{IssuedScope}}",
+  "isSingleDevice": false,
+  "effectiveAt": "2026-03-22T00:00:00Z",
   "expireAt": "2026-12-31T23:59:59Z",
   "isPermanent": false,
   "canReissue": true,
   "canRenew": true,
   "purpose": "CustomerQuery",
-  "remark": "Created from .http"
+  "remark": "Created from Dimensions.Admin.Api.http"
 }
 
-### Token Usage
-POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/usage
+### Token Detail
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/detail
 Content-Type: application/json
-Authorization: Bearer {{admin_token}}
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
 
 {
-  "tokenId": "{{user_token_id}}",
+  "tokenId": "{{create_user_token.response.body.$.data.tokenId}}"
+}
+
+### Token List
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/list
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "userId": "{{IssuedUserId}}",
+  "pageNo": 1,
+  "pageSize": 20
+}
+
+### Token Usage Log
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/usage
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "tokenId": "{{create_user_token.response.body.$.data.tokenId}}",
+  "pageNo": 1,
+  "pageSize": 20
+}
+
+### Token Action Log
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/action-log
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "tokenId": "{{create_user_token.response.body.$.data.tokenId}}",
   "pageNo": 1,
   "pageSize": 20
 }
@@ -51,10 +94,11 @@ Authorization: Bearer {{admin_token}}
 ### API Request Log List
 POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/log/request/list
 Content-Type: application/json
-Authorization: Bearer {{admin_token}}
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
 
 {
   "path": "/admin-api/auth/me",
+  "userId": "ADMIN001",
   "pageNo": 1,
   "pageSize": 20
 }
@@ -62,10 +106,64 @@ Authorization: Bearer {{admin_token}}
 ### API Exception Log List
 POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/log/exception/list
 Content-Type: application/json
-Authorization: Bearer {{admin_token}}
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
 
 {
+  "path": "/admin-api/device/disable",
   "errorCode": "Device.NotFound",
+  "pageNo": 1,
+  "pageSize": 20
+}
+
+### Reissue Token
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/reissue
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "tokenId": "{{create_user_token.response.body.$.data.tokenId}}",
+  "reason": "HTTP manual reissue"
+}
+
+### Renew Token
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/renew
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "tokenId": "{{create_user_token.response.body.$.data.tokenId}}",
+  "reason": "HTTP manual renew"
+}
+
+### Revoke Token
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/revoke
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "tokenId": "{{create_user_token.response.body.$.data.tokenId}}",
+  "reason": "HTTP manual revoke"
+}
+
+### 錯誤情境：停用不存在的 Device，方便驗證 exception log
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/device/disable
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "deviceId": "DEVICE-NOT-FOUND",
+  "reason": "HTTP exception log validation"
+}
+
+### 再查一次 API Exception Log，確認剛剛錯誤已寫入
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/log/exception/list
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "path": "/admin-api/device/disable",
+  "errorCode": "Device.NotFound",
+  "userId": "ADMIN001",
   "pageNo": 1,
   "pageSize": 20
 }

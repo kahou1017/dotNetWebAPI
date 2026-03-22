@@ -115,7 +115,8 @@
 
 ### 5. 開發體驗
 
-- [ ] 補 `.http` 測試案例
+- [x] 補 `.http` 測試案例
+  Completed: 2026-03-22 09:35
 - [ ] 規劃 Postman collection
 - [ ] 規劃 Bruno collection
 - [x] 更新 README

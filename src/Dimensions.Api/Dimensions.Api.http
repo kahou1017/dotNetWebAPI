@@ -1,15 +1,135 @@
 @Dimensions.Api_HostAddress = http://localhost:5249
+@Dimensions.Admin.Api_HostAddress = http://localhost:5250
+@AdminAccount = admin
+@AdminPassword = admin
+@ScopedUserId = USERHTTP002
+@ScopedUserName = Http Business User
+
+### 使用說明
+# 1. 先在 Admin API 建立 token
+# 2. 再呼叫業務 API
+# 3. 最後回到 Admin API 查 request / exception log
 
 ### Public API
 GET {{Dimensions.Api_HostAddress}}/api/public/system-info
 Accept: application/json
 
-### User Protected Business API
-POST {{Dimensions.Api_HostAddress}}/api/customer/query
+### Admin Login
+# @name admin_login
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/auth/login
 Content-Type: application/json
-Authorization: Bearer {{user_token}}
 
 {
-  "customerId": "CUST-001",
-  "keyword": "Kevin"
+  "loginAccount": "{{AdminAccount}}",
+  "password": "{{AdminPassword}}"
+}
+
+### 建立可查 Customer 的業務 Token
+# @name create_customer_token
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/create
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "tokenType": "UserAccess",
+  "userId": "{{ScopedUserId}}",
+  "userName": "{{ScopedUserName}}",
+  "tokenName": "Business Customer Query Token",
+  "scope": "customer.query",
+  "isSingleDevice": false,
+  "effectiveAt": "2026-03-22T00:00:00Z",
+  "expireAt": "2026-12-31T23:59:59Z",
+  "isPermanent": false,
+  "canReissue": true,
+  "canRenew": true,
+  "purpose": "CustomerQuery",
+  "remark": "Created from Dimensions.Api.http"
+}
+
+### 成功情境：Customer Query
+POST {{Dimensions.Api_HostAddress}}/api/customer/query
+Content-Type: application/json
+Authorization: Bearer {{create_customer_token.response.body.$.data.accessToken}}
+
+{
+  "customerId": "CUST-900",
+  "keyword": "VIP"
+}
+
+### 錯誤情境：Customer Not Found
+POST {{Dimensions.Api_HostAddress}}/api/customer/query
+Content-Type: application/json
+Authorization: Bearer {{create_customer_token.response.body.$.data.accessToken}}
+
+{
+  "customerId": "CUST-NOT-FOUND",
+  "keyword": "Missing"
+}
+
+### 建立沒有 customer.query scope 的 Token
+# @name create_forbidden_token
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/create
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "tokenType": "UserAccess",
+  "userId": "USERHTTP003",
+  "userName": "Scope Forbidden User",
+  "tokenName": "Scope Forbidden Token",
+  "scope": "account.update",
+  "isSingleDevice": false,
+  "effectiveAt": "2026-03-22T00:00:00Z",
+  "expireAt": "2026-12-31T23:59:59Z",
+  "isPermanent": false,
+  "canReissue": true,
+  "canRenew": true,
+  "purpose": "ScopeValidation",
+  "remark": "Forbidden scope from Dimensions.Api.http"
+}
+
+### 權限情境：Scope 不足，應回 403
+POST {{Dimensions.Api_HostAddress}}/api/customer/query
+Content-Type: application/json
+Authorization: Bearer {{create_forbidden_token.response.body.$.data.accessToken}}
+
+{
+  "customerId": "CUST-900",
+  "keyword": "VIP"
+}
+
+### 查業務 API 的 Request Log
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/log/request/list
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "path": "/api/customer/query",
+  "userId": "{{ScopedUserId}}",
+  "pageNo": 1,
+  "pageSize": 20
+}
+
+### 查業務 API 的 Exception Log
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/log/exception/list
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "path": "/api/customer/query",
+  "errorCode": "Customer.NotFound",
+  "userId": "{{ScopedUserId}}",
+  "pageNo": 1,
+  "pageSize": 20
+}
+
+### 查 Token Usage Log
+POST {{Dimensions.Admin.Api_HostAddress}}/admin-api/token/usage
+Content-Type: application/json
+Authorization: Bearer {{admin_login.response.body.$.data.accessToken}}
+
+{
+  "tokenId": "{{create_customer_token.response.body.$.data.tokenId}}",
+  "pageNo": 1,
+  "pageSize": 20
 }

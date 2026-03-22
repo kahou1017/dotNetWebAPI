@@ -43,6 +43,16 @@ dotnet restore .\Dimensions.sln
 
 這是目前最快的手動驗證方式。
 
+目前 `.http` 已整理的情境包含：
+
+- admin login / admin me
+- create token / token detail / token list
+- token usage / token action log
+- request log / exception log 查詢
+- customer query 成功情境
+- customer not found 錯誤情境
+- scope 不足的 `403` 情境
+
 ### 4. 開發完成後固定執行
 
 ```powershell
@@ -156,6 +166,7 @@ dotnet restore .\Dimensions.sln
 3. `POST /admin-api/token/create`
 4. `POST /admin-api/log/request/list`
 5. `POST /admin-api/log/exception/list`
+6. 視需要再測 `reissue / renew / revoke`
 
 ### 業務 API
 
