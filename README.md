@@ -206,6 +206,9 @@ SQLite 檔案位置：
 - 本機 log 會寫到 `Logs/`
 - 已完成 token `ActionLog / UsageLog`
 - 已完成 `ApiRequestLog` 與 `ApiExceptionLog` 寫入 SQLite
+- 已完成 `ApiPayloadLog` 第一版寫入 SQLite
+- 第一版 payload log 只記錄 `application/json` 與 `text/*`
+- 目前會遮罩 `password / accessToken / refreshToken / authorization`
 
 ## 測試
 

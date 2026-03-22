@@ -194,7 +194,9 @@ tests/
 - 使用 ASP.NET Core `ILogger<T>`
 - 使用 `log4net` 作為本機檔案 logging provider
 - `ApiRequestLogMiddleware` 目前已會將基本 request 資訊寫入 DB
+- `ApiRequestLogMiddleware` 第一版也會將 `application/json` 與 `text/*` 的 request / response payload 寫入 DB
 - `ExceptionHandlingMiddleware` 目前已會將例外基本資訊寫入 DB
+- payload log 目前會遮罩 `password / accessToken / refreshToken / authorization`
 - `TokenUsageLogService` 目前只負責 token usage log，不等同完整 API logging service
 
 之後 `Dimensions.Api` 與 `Dimensions.Admin.Api` 都應遵循相同方向。

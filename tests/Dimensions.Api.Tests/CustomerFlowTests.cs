@@ -87,6 +87,25 @@ public sealed class CustomerFlowTests : IDisposable
 
         var count = Convert.ToInt32(await command.ExecuteScalarAsync());
         Assert.True(count >= 1);
+
+        await using var payloadCommand = connection.CreateCommand();
+        payloadCommand.CommandText = """
+            SELECT Direction, PayloadText
+            FROM ApiPayloadLogs
+            WHERE RequestPath = '/api/customer/query'
+              AND UserId = 'USER900'
+            ORDER BY CreatedAt;
+            """;
+
+        await using var reader = await payloadCommand.ExecuteReaderAsync();
+        var payloads = new List<(string Direction, string PayloadText)>();
+        while (await reader.ReadAsync())
+        {
+            payloads.Add((reader.GetString(0), reader.GetString(1)));
+        }
+
+        Assert.Contains(payloads, item => item.Direction == "Request" && item.PayloadText.Contains("\"customerId\":\"CUST-900\"", StringComparison.Ordinal));
+        Assert.Contains(payloads, item => item.Direction == "Response" && item.PayloadText.Contains("\"customerName\":\"VIP Customer\"", StringComparison.Ordinal));
     }
 
     [Fact]

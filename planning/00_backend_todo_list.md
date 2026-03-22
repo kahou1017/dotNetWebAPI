@@ -89,7 +89,8 @@
   Completed: 2026-03-21 01:39
 - [x] 補 `AuthenticatedUser` 權限驗證
   Completed: 2026-03-21 01:39
-- [ ] 規劃 scope 規則
+- [x] 規劃 scope 規則
+  Completed: 2026-03-21 03:39
 
 ### 4. Logging 完整化
 
@@ -103,8 +104,10 @@
   Completed: 2026-03-21 02:14
 - [x] API exception log 寫入 DB
   Completed: 2026-03-21 03:00
-- [ ] request / response payload log 寫入 DB
-- [ ] sensitive data masking 規則
+- [x] request / response payload log 寫入 DB
+  Completed: 2026-03-21 04:05
+- [x] sensitive data masking 規則
+  Completed: 2026-03-21 04:05
 - [x] 管理端 log 查詢 API
   Completed: 2026-03-21 03:20
 

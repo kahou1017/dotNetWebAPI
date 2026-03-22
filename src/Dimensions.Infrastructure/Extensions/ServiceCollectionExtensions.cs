@@ -32,6 +32,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
         services.AddScoped<IAdminRepository, AdminRepository>();
         services.AddScoped<IApiExceptionLogRepository, ApiExceptionLogRepository>();
+        services.AddScoped<IApiPayloadLogRepository, ApiPayloadLogRepository>();
         services.AddScoped<IApiRequestLogRepository, ApiRequestLogRepository>();
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<ITokenRepository, TokenRepository>();

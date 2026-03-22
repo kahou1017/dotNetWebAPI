@@ -60,6 +60,25 @@ public sealed class AdminAuthFlowTests : IDisposable
 
         var count = Convert.ToInt32(await command.ExecuteScalarAsync());
         Assert.True(count >= 2);
+
+        await using var payloadCommand = connection.CreateCommand();
+        payloadCommand.CommandText = """
+            SELECT Direction, PayloadText
+            FROM ApiPayloadLogs
+            WHERE RequestPath = '/admin-api/auth/login'
+            ORDER BY CreatedAt;
+            """;
+
+        await using var reader = await payloadCommand.ExecuteReaderAsync();
+        var payloads = new List<(string Direction, string PayloadText)>();
+        while (await reader.ReadAsync())
+        {
+            payloads.Add((reader.GetString(0), reader.GetString(1)));
+        }
+
+        Assert.Contains(payloads, item => item.Direction == "Request" && item.PayloadText.Contains("\"password\":\"***MASKED***\"", StringComparison.Ordinal));
+        Assert.Contains(payloads, item => item.Direction == "Response" && item.PayloadText.Contains("\"accessToken\":\"***MASKED***\"", StringComparison.Ordinal));
+        Assert.DoesNotContain(payloads, item => item.PayloadText.Contains("\"password\":\"admin\"", StringComparison.Ordinal));
     }
 
     [Fact]

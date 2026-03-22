@@ -37,10 +37,10 @@ await app.Services.InitializeDimensionsDatabaseAsync();
 app.UseDimensionsSwagger();
 app.UseCors("DefaultCors");
 app.UseMiddleware<CaseIdMiddleware>();
+app.UseMiddleware<ApiRequestLogMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<ApiRequestLogMiddleware>();
 app.MapControllers();
 
 app.Run();

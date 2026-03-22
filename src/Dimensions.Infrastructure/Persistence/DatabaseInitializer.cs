@@ -100,6 +100,26 @@ public sealed class DatabaseInitializer(
             CREATE INDEX IF NOT EXISTS IX_ApiExceptionLogs_OccurredAt ON ApiExceptionLogs(OccurredAt);
             CREATE INDEX IF NOT EXISTS IX_ApiExceptionLogs_TokenId ON ApiExceptionLogs(TokenId);
 
+            CREATE TABLE IF NOT EXISTS ApiPayloadLogs (
+                PayloadLogId TEXT NOT NULL PRIMARY KEY,
+                CaseId TEXT NOT NULL,
+                CreatedAt TEXT NOT NULL,
+                Direction TEXT NOT NULL,
+                HttpMethod TEXT NOT NULL,
+                RequestPath TEXT NOT NULL,
+                ContentType TEXT NULL,
+                PayloadText TEXT NOT NULL,
+                PayloadLength INTEGER NOT NULL,
+                IsTruncated INTEGER NOT NULL,
+                IsAuthenticated INTEGER NOT NULL,
+                TokenId TEXT NULL,
+                UserId TEXT NULL,
+                TokenType TEXT NULL
+            );
+
+            CREATE INDEX IF NOT EXISTS IX_ApiPayloadLogs_CaseId ON ApiPayloadLogs(CaseId);
+            CREATE INDEX IF NOT EXISTS IX_ApiPayloadLogs_CreatedAt ON ApiPayloadLogs(CreatedAt);
+
             CREATE TABLE IF NOT EXISTS Tokens (
                 TokenId TEXT NOT NULL PRIMARY KEY,
                 JwtId TEXT NOT NULL,
